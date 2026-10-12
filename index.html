@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Bil Kaç</title>
+<meta name="description" content="Bil Kaç: tarih, coğrafya, matematik, bilim ve teknoloji sorularıyla dolu eğlenceli bir bilgi oyunu.">
+<meta name="theme-color" content="#0b1230">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bil Kaç">
+<meta property="og:description" content="Bilgi oyunu: bil, kaç, kazan!">
+<meta property="og:image" content="https://bilkac.netlify.app/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{box-sizing:border-box;--bg:#0b1230;--fg:#e8f0ff;--ac:#ffb400;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:"Trebuchet MS",system-ui,sans-serif;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+input{user-select:text;-webkit-user-select:text}
+#c{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 6px);padding:0 12px;pointer-events:none;color:#fff;text-shadow:0 1px 3px #000;font-weight:700;z-index:2}
+.hr{display:flex;align-items:center;justify-content:space-between;height:28px}
+#hearts img{width:24px;height:24px;margin-right:2px;vertical-align:middle}
+.sc{font-size:22px;letter-spacing:.5px}
+.hr2{display:flex;gap:10px;margin-top:2px;font-size:15px}
+.hr2 img{width:20px;height:20px;vertical-align:middle}
+.pw{display:flex;gap:6px;margin-top:4px;font-size:12px}
+.pw span{background:rgba(0,0,0,.4);border-radius:10px;padding:1px 7px 1px 2px}
+.pw img{width:18px;height:18px;vertical-align:middle}
+.ib{position:absolute;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.35);color:#fff;font-size:18px;z-index:3;display:none}
+#pbtn{top:calc(env(safe-area-inset-top,0px) + 6px)}
+#mute{top:calc(env(safe-area-inset-top,0px) + 48px)}
+#banner{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 92px);transform:translateX(-50%);width:min(92vw,380px);display:none;align-items:center;gap:10px;background:rgba(6,10,30,.72);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:8px 12px;z-index:2;pointer-events:none;animation:bn .5s}
+#banner.on{display:flex}
+#banner canvas{width:64px;height:64px;flex:none}
+#banner small{display:block;color:#ffb400;font-size:12px;letter-spacing:1px;text-transform:uppercase}
+#banner b{display:block;font-size:19px;color:#fff}
+#banner span{font-size:13px;color:#cfe0ff;line-height:1.3}
+@keyframes bn{from{opacity:0;transform:translateX(-50%) translateY(-12px)}}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:18px 14px;background:rgba(5,10,28,.92);color:#fff;overflow-y:auto;text-align:center;touch-action:pan-y;z-index:5}
+.ov::before,.ov::after{content:'';margin:auto}
+.ov>*{flex-shrink:0}
+#quiz{display:none;z-index:6}
+h1{margin:4px 0 0;font-size:40px;letter-spacing:1px;color:var(--ac)}
+h2{margin:4px 0 8px;color:var(--ac);font-size:26px}
+.sub{margin:2px 0 8px;color:#cfe0ff}
+.logo svg{width:96px;height:96px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+.wal{display:flex;align-items:center;gap:6px;justify-content:center;margin:4px 0 8px;font-size:18px;font-weight:700;color:#ffd23f}
+.wal img{width:26px;height:26px}
+.mb{width:min(300px,80vw);box-sizing:border-box;margin:6px 0;padding:13px 20px;border-radius:16px;background:rgba(255,255,255,.14);font-size:18px;cursor:pointer;color:#fff}
+.mb:active{transform:scale(.97)}
+.mb.ye{background:var(--ac);color:#10203f;font-weight:700}
+#go{width:min(300px,80vw);box-sizing:border-box;margin:12px 0 4px;padding:16px;border-radius:18px;background:linear-gradient(180deg,#ffd23f,#ff9f0a);color:#1a1a2e;font-size:24px;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(255,160,0,.45)}
+.selinfo{font-size:13px;color:#a9bde6;margin:-2px 0 4px}
+#nm{margin:8px 0 2px;padding:9px 12px;border-radius:12px;border:0;font-size:15px;text-align:center;width:min(240px,70vw)}
+.sec{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#ffb400;margin:14px 0 6px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:360px}
+.chips span{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:2px solid transparent;border-radius:999px;padding:6px 14px 6px 8px;font-size:16px;cursor:pointer}
+.chips span img{width:26px;height:26px}
+.chips span.on{background:rgba(255,180,0,.22);border-color:var(--ac);font-weight:700}
+.sl{--c:#ffd60a;position:relative;width:min(330px,90vw);height:84px;margin:6px 0 0;touch-action:none}
+.sl .tr{position:absolute;left:28px;right:28px;top:36px;height:12px;border-radius:8px;background:rgba(255,255,255,.14)}
+.sl .fl{position:absolute;left:28px;top:36px;height:12px;border-radius:8px;width:0;background:linear-gradient(90deg,#4cd964,var(--c));box-shadow:0 0 14px var(--c)}
+.sl .dot{position:absolute;top:32px;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:#26335f;border:2px solid rgba(255,255,255,.35)}
+.sl .th{position:absolute;top:12px;width:60px;height:60px;margin-left:-30px;font-size:40px;line-height:60px;text-align:center;cursor:grab;filter:drop-shadow(0 0 10px var(--c));background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%);border-radius:50%}
+.sl.max .th{animation:pl .7s infinite alternate}
+@keyframes pl{to{filter:drop-shadow(0 0 22px var(--c)) drop-shadow(0 0 8px #fff)}}
+.lb2{display:flex;justify-content:space-between;width:min(330px,90vw);padding:0;box-sizing:border-box;font-size:14px;color:#8ea3d1;margin-top:-4px}
+.lb2 span{width:56px;text-align:center}
+.lb2 span.on{color:#fff;font-weight:700}
+.sp{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c);animation:spk .65s forwards;pointer-events:none}
+@keyframes spk{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+#dinfo{margin-top:8px;min-height:62px}
+.dn{font-size:28px;font-weight:800}.dn small{font-size:18px;opacity:.9}
+.dd{font-size:14px;color:#cfe0ff;max-width:300px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:min(380px,92vw);text-align:left}
+.cd{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.08);border-radius:12px;padding:8px}
+.cd img{width:38px;height:38px;flex:none}
+.cd b{display:block;font-size:14px}.cd span{font-size:12px;color:#c0d0f0;line-height:1.25}
+.how{width:min(380px,92vw);text-align:left;font-size:14px;line-height:1.5;background:rgba(255,255,255,.08);border-radius:14px;padding:10px 12px;margin:4px 0}
+.how table{width:100%;border-collapse:collapse}.how td{padding:3px 6px;border-bottom:1px solid rgba(255,255,255,.1)}
+.shop{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:min(380px,92vw)}
+.rc{background:rgba(255,255,255,.09);border:2px solid transparent;border-radius:16px;padding:8px;cursor:pointer}
+.rc.eq{border-color:var(--ac);background:rgba(255,180,0,.15)}
+.rc img.r{width:84px;height:84px}
+.rc b{display:block;font-size:14px}.rc span{font-size:14px;color:#ffd23f;display:flex;align-items:center;justify-content:center;gap:4px}
+.rc span img{width:18px;height:18px}
+.qh{display:flex;align-items:center;gap:8px;font-size:16px;color:#cfe0ff}
+.qh img{width:34px;height:34px}
+.db{padding:2px 10px;border-radius:999px;color:#10203f;font-weight:800;font-size:13px}
+#qt{width:min(300px,80vw);height:12px;background:rgba(255,255,255,.18);border-radius:8px;overflow:hidden;margin:10px 0 2px}
+#qf{display:block;height:100%;width:100%;background:var(--ac);transition:background .3s}
+#qs{font-size:22px;font-weight:800;min-height:28px}
+.qq{font-size:20px;line-height:1.35;max-width:420px;margin:8px 0 12px}
+#qo button{display:block;width:min(340px,86vw);margin:7px auto;padding:13px 16px;border:0;border-radius:14px;font-size:17px;background:#e8f0ff;color:#0b1230;font-weight:600}
+#sb{background:rgba(255,210,63,.18);border:1px solid #ffd23f;color:#ffd23f;font-weight:700;margin-top:10px}
+#sb.off{opacity:.35}
+.lbrow{display:flex;justify-content:space-between;width:min(340px,88vw);padding:7px 12px;border-radius:10px;background:rgba(255,255,255,.07);margin:3px 0;font-size:16px}
+.lbrow.me{background:rgba(255,180,0,.25)}
+.note{font-size:13px;color:#a9bde6;max-width:320px;margin:6px 0}
+.res{font-size:17px;margin:3px 0}.big{font-size:38px;font-weight:800;color:#ffd23f;margin:8px 0}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud"></div>
+<button class="ib" id="pbtn" aria-label="Duraklat">⏸</button>
+<button class="ib" id="mute" aria-label="Ses">🔊</button>
+<div id="banner"><canvas id="bc" width="128" height="128"></canvas><div><small id="bk"></small><b id="bn"></b><span id="bd"></span></div></div>
+<div id="msg" class="ov"></div>
+<div id="quiz" class="ov"></div>
+<script>const QB={"tarih":[["Türkiye'nin ilk cumhurbaşkanı kimdir?","Mustafa Kemal Atatürk","İsmet İnönü","Celal Bayar",0],["Cumhuriyet hangi tarihte ilan edildi?","29 Ekim 1923","23 Nisan 1920","30 Ağustos 1922",0],["Piramitleri hangi uygarlık yaptı?","Eski Mısırlılar","Romalılar","Aztekler",0],["İstanbul hangi yıl fethedildi?","1453","1071","1299",1],["Osmanlı Devleti'ni kim kurdu?","Osman Bey","Orhan Bey","Fatih Sultan Mehmet",1],["Çanakkale Deniz Zaferi hangi tarihte?","18 Mart 1915","23 Nisan 1920","29 Ekim 1923",1],["Atatürk Samsun'a hangi tarihte çıktı?","19 Mayıs 1919","23 Nisan 1920","30 Ağustos 1922",1],["İlk Olimpiyat Oyunları nerede yapıldı?","Antik Yunanistan","Roma","Mısır",1],["Malazgirt Savaşı hangi yıl oldu?","1071","1453","1517",2],["Mohaç Meydan Muharebesi hangi yıl?","1526","1453","1571",2],["Büyük Selçuklu Devleti'ni kuran?","Tuğrul Bey","Alparslan","Melikşah",2],["Cumhuriyet Bayramı hangi gün kutlanır?","29 Ekim","23 Nisan","30 Ağustos",0],["Atatürk hangi şehirde doğmuştur?","Selanik","İstanbul","Ankara",0],["Çanakkale Savaşları hangi savaşın içinde yer alır?","I. Dünya Savaşı","II. Dünya Savaşı","Kırım Savaşı",0],["Lozan Barış Antlaşması hangi yıl imzalandı?","1923","1920","1925",2],["Büyük Taarruz hangi yıl başladı?","1922","1919","1920",2],["Kadeş Antlaşması hangi iki devlet arasında yapıldı?","Mısır ve Hititler","Mısır ve Asurlular","Hititler ve Frigler",3],["Lale Devri hangi padişah döneminde yaşandı?","III. Ahmed","II. Mahmud","I. Abdülhamid",3],["Sakarya Meydan Muharebesi hangi yıl yapıldı?","1921","1920","1922",3],["Fransız Devrimi hangi yıl başladı?","1789","1776","1815",3],["Berlin Duvarı hangi yıl yıkıldı?","1989","1991","1961",3],["İstanbul'u fetheden padişah kimdir?","Fatih Sultan Mehmet","Yavuz Sultan Selim","Kanuni Sultan Süleyman",0],["Kurtuluş Savaşı'nın başkomutanı kimdir?","Mustafa Kemal Atatürk","İsmet İnönü","Fevzi Çakmak",0],["Kanuni Sultan Süleyman hangi devletin padişahıdır?","Osmanlı","Selçuklu","Bizans",0],["TBMM hangi tarihte açıldı?","23 Nisan 1920","29 Ekim 1923","19 Mayıs 1919",1],["Saltanat hangi yıl kaldırıldı?","1922","1923","1924",1],["Harf Devrimi hangi yıl yapıldı?","1928","1923","1934",1],["Halifelik hangi yıl kaldırıldı?","1924","1922","1926",2],["Soyadı Kanunu hangi yıl çıkarıldı?","1934","1928","1938",2],["Kadınlara milletvekili seçme ve seçilme hakkı hangi yıl verildi?","1934","1930","1923",2],["Misak-ı Millî hangi yıl kabul edildi?","1920","1919","1921",2],["Amasya Genelgesi hangi yıl yayımlandı?","1919","1920","1921",2],["Mondros Ateşkes Antlaşması hangi yıl imzalandı?","1918","1920","1922",2],["Sevr Antlaşması hangi yıl imzalandı?","1920","1918","1923",2],["Mudanya Ateşkes Antlaşması hangi yıl imzalandı?","1922","1918","1923",3],["İlk Osmanlı anayasası (Kanun-ı Esasi) hangi yıl ilan edildi?","1876","1839","1908",3],["Tanzimat Fermanı hangi yıl ilan edildi?","1839","1856","1876",3],["Islahat Fermanı hangi yıl ilan edildi?","1856","1839","1876",3],["Preveze Deniz Savaşı hangi yıl yapıldı?","1538","1453","1571",3],["Ankara Savaşı'nda Yıldırım Bayezid kime yenildi?","Timur","Cengiz Han","Attila",3],["Birinci Kosova Savaşı hangi yıl yapıldı?","1389","1402","1444",3],["Türkiye NATO'ya hangi yıl üye oldu?","1952","1949","1960",3],["23 Nisan hangi bayramdır?","Ulusal Egemenlik ve Çocuk Bayramı","Zafer Bayramı","Gençlik ve Spor Bayramı",0],["30 Ağustos hangi bayramdır?","Zafer Bayramı","Cumhuriyet Bayramı","Gençlik ve Spor Bayramı",0],["19 Mayıs hangi bayramdır?","Atatürk'ü Anma, Gençlik ve Spor Bayramı","Zafer Bayramı","Cumhuriyet Bayramı",0],["Atatürk'ün vefat ettiği gün ve ay?","10 Kasım","29 Ekim","19 Mayıs",0],["Atatürk hangi yıl vefat etti?","1938","1934","1945",1],["Türkiye Cumhuriyeti'nin ikinci cumhurbaşkanı kimdir?","İsmet İnönü","Celal Bayar","Cemal Gürsel",1],["Malazgirt Zaferi'nin Türk komutanı kimdir?","Alparslan","Tuğrul Bey","Melikşah",1],["Birinci Dünya Savaşı hangi yıllar arasında yaşandı?","1914-1918","1939-1945","1904-1908",1],["İkinci Dünya Savaşı hangi yıl başladı?","1939","1914","1945",1],["Orhun Yazıtları hangi devlete aittir?","Göktürkler","Uygurlar","Hunlar",2],["ABD bağımsızlığını hangi yıl ilan etti?","1776","1789","1861",2],["Mısır'ı 1517'de fetheden padişah kimdir?","Yavuz Sultan Selim","Kanuni Sultan Süleyman","Fatih Sultan Mehmet",2],["Halifelik Osmanlı'ya hangi padişah döneminde geçti?","Yavuz Sultan Selim","Kanuni Sultan Süleyman","II. Bayezid",2],["Atatürk'e \"Atatürk\" soyadı hangi yıl verildi?","1934","1923","1938",2],["Büyük Hun Devleti'nin kurucusu kimdir?","Mete Han","Attila","Bumin Kağan",3],["Türk Medeni Kanunu hangi yıl kabul edildi?","1926","1923","1930",3],["Şapka Kanunu hangi yıl çıkarıldı?","1925","1928","1934",3],["Türk Tarih Kurumu hangi yıl kuruldu?","1931","1923","1938",3],["Osmanlı'nın en uzun süre tahtta kalan padişahı kimdir?","Kanuni Sultan Süleyman","II. Abdülhamid","Fatih Sultan Mehmet",3],["Çaldıran Savaşı hangi yıl yapıldı?","1514","1517","1526",3],["Ridaniye Savaşı hangi yıl yapıldı?","1517","1514","1526",3]],"cog":[["En büyük okyanus hangisidir?","Pasifik","Atlas","Hint",0],["Dünyada kaç kıta vardır?","7","5","6",0],["Dünyanın en büyük sıcak çölü?","Sahra","Gobi","Kalahari",0],["Türkiye'nin en yüksek dağı?","Ağrı Dağı","Erciyes","Uludağ",0],["Türkiye'nin en büyük gölü?","Van Gölü","Tuz Gölü","Beyşehir",1],["Türkiye kaç coğrafi bölgeye ayrılır?","7","5","9",1],["En küçük kıta hangisidir?","Avustralya","Avrupa","Antarktika",1],["Türkiye'nin en uzun nehri?","Kızılırmak","Fırat","Sakarya",1],["En derin göl hangisidir?","Baykal","Van","Victoria",2],["Nil Nehri hangi denize dökülür?","Akdeniz","Kızıldeniz","Karadeniz",2],["Türkiye'nin en kalabalık bölgesi?","Marmara","Ege","İç Anadolu",2],["Fransa'nın başkenti?","Paris","Lyon","Marsilya",0],["Japonya'nın başkenti?","Tokyo","Osaka","Kyoto",0],["İtalya'nın başkenti?","Roma","Milano","Venedik",0],["Almanya'nın başkenti?","Berlin","Münih","Hamburg",0],["İspanya'nın başkenti?","Madrid","Barselona","Sevilla",0],["Kanada'nın başkenti?","Ottawa","Toronto","Vancouver",1],["Mısır'ın başkenti?","Kahire","İskenderiye","Gize",1],["Avustralya'nın başkenti?","Canberra","Sidney","Melbourne",2],["Brezilya'nın başkenti?","Brasília","Rio de Janeiro","São Paulo",2],["İsviçre'nin başkenti?","Bern","Zürih","Cenevre",2],["Yeni Zelanda'nın başkenti?","Wellington","Auckland","Christchurch",2],["Pakistan'ın başkenti?","İslamabad","Karaçi","Lahor",2],["Türkiye'nin en kalabalık şehri, iki kıtada yer alır.","İstanbul","Ankara","İzmir",0],["Kebabıyla ünlü, Seyhan Nehri kıyısındaki şehir?","Adana","Mersin","Gaziantep",0],["Anıtkabir hangi şehirdedir?","Ankara","İzmir","Bursa",0],["Uludağ ve İskender kebabıyla ünlü şehir?","Bursa","Eskişehir","Kocaeli",0],["Efes Antik Kenti hangi ilin sınırlarında?","İzmir","Antalya","Muğla",1],["Peri bacalarıyla ünlü Kapadokya hangi ilde?","Nevşehir","Konya","Sivas",1],["Sümela Manastırı hangi ilde?","Trabzon","Samsun","Sinop",1],["Truva Antik Kenti hangi ilin yakınında?","Çanakkale","Edirne","Balıkesir",1],["Fıstığı ve baklavasıyla ünlü şehir?","Gaziantep","Diyarbakır","Mardin",2],["Pamukkale travertenleri hangi ilde?","Denizli","Aydın","Manisa",2],["Göbeklitepe hangi ilde?","Şanlıurfa","Mardin","Diyarbakır",2],["Nemrut Dağı heykelleri hangi ilde?","Adıyaman","Malatya","Şanlıurfa",2],["Safranbolu hangi ilde?","Karabük","Bolu","Zonguldak",2],["Şili'nin başkenti?","Santiago","Valparaíso","Lima",3],["Etiyopya'nın başkenti?","Addis Ababa","Nairobi","Kartum",3],["Kazakistan'ın başkenti?","Astana","Almatı","Taşkent",3],["Bosna Hersek'in başkenti?","Saraybosna","Belgrad","Zagreb",3],["Hangisinin Hazar Denizi kıyısı yoktur?","Türkiye","Kazakistan","İran",3],["Kara üzerindeki en uzun dağ silsilesi?","And Dağları","Himalayalar","Alpler",3],["Türkiye'nin en doğudaki ili?","Iğdır","Van","Kars",3],["Dünyanın en yüksek dağı hangisidir?","Everest","K2","Kilimanjaro",0],["Nil Nehri hangi kıtadadır?","Afrika","Asya","Güney Amerika",0],["Kıbrıs hangi denizdedir?","Akdeniz","Ege Denizi","Karadeniz",0],["Türkiye'nin batısında yer alan deniz hangisidir?","Ege Denizi","Karadeniz","Akdeniz",0],["Portekiz'in başkenti?","Lizbon","Porto","Madrid",0],["Türkiye'nin yüzölçümü en büyük ili?","Konya","Sivas","Erzurum",1],["Türkiye'nin nüfusça en büyük ikinci ili?","Ankara","İzmir","Bursa",1],["Yüzölçümü en büyük ülke hangisidir?","Rusya","Kanada","Çin",1],["Dünyanın en küçük ülkesi hangisidir?","Vatikan","Monako","San Marino",1],["Norveç'in başkenti?","Oslo","Bergen","Helsinki",1],["Polonya'nın başkenti?","Varşova","Krakow","Prag",1],["Güney Kore'nin başkenti?","Seul","Busan","Pekin",1],["Hindistan'ın başkenti?","Yeni Delhi","Mumbai","Kalküta",1],["Türkiye'nin en büyük Ege adası hangisidir?","Gökçeada","Bozcaada","Marmara Adası",2],["Türkiye'de en çok yağış alan bölge?","Karadeniz","İç Anadolu","Güneydoğu Anadolu",2],["Panama Kanalı hangi okyanusları birleştirir?","Atlas ve Pasifik","Hint ve Atlas","Pasifik ve Hint",2],["Süveyş Kanalı hangi denizleri birleştirir?","Akdeniz ve Kızıldeniz","Karadeniz ve Akdeniz","Hazar ve Karadeniz",2],["Dünyanın en kalabalık ülkesi hangisidir?","Hindistan","Çin","ABD",2],["İsveç'in başkenti?","Stockholm","Oslo","Kopenhag",2],["Hanoi hangi ülkenin başkentidir?","Vietnam","Tayland","Kamboçya",2],["Kenya'nın başkenti?","Nairobi","Mombasa","Kampala",2],["Peru'nun başkenti?","Lima","Quito","Bogota",2],["Fas'ın başkenti?","Rabat","Kazablanka","Marakeş",2],["Nijerya'nın başkenti?","Abuja","Lagos","Akra",3],["Tanzanya'nın resmî başkenti?","Dodoma","Dar es Salaam","Nairobi",3],["Myanmar'ın başkenti?","Naypyidaw","Yangon","Bangkok",3],["Türkiye'nin en kuzeydeki ili?","Sinop","Samsun","Artvin",3],["Yüzölçümüne göre dünyanın en büyük gölü?","Hazar Denizi","Superior Gölü","Baykal",3],["Anadolu hangi kıtada yer alır?","Asya","Avrupa","Afrika",0],["Dünyanın en büyük kıtası hangisidir?","Asya","Afrika","Avrupa",0],["Dünyanın en soğuk kıtası hangisidir?","Antarktika","Avrupa","Asya",0],["Alpler hangi kıtadadır?","Avrupa","Asya","Afrika",0],["Yunanistan'ın başkenti?","Atina","Selanik","Patra",0],["Rusya'nın başkenti?","Moskova","St. Petersburg","Kiev",0],["Ankara hangi coğrafi bölgededir?","İç Anadolu","Marmara","Ege",0],["Trabzon hangi coğrafi bölgededir?","Karadeniz","Doğu Anadolu","Marmara",0],["İstanbul Boğazı hangi iki denizi birbirine bağlar?","Karadeniz ve Marmara","Ege ve Akdeniz","Marmara ve Ege",1],["Çanakkale Boğazı hangi iki denizi birbirine bağlar?","Marmara ve Ege","Karadeniz ve Marmara","Akdeniz ve Ege",1],["Amazon Nehri hangi kıtadadır?","Güney Amerika","Afrika","Asya",1],["Antalya hangi coğrafi bölgededir?","Akdeniz","Ege","Marmara",1],["Erzurum hangi coğrafi bölgededir?","Doğu Anadolu","Karadeniz","İç Anadolu",1],["Bursa hangi coğrafi bölgededir?","Marmara","Ege","İç Anadolu",1],["Hollanda'nın başkenti?","Amsterdam","Lahey","Rotterdam",1],["Avusturya'nın başkenti?","Viyana","Salzburg","Graz",1],["Çin'in başkenti?","Pekin","Şanghay","Hong Kong",1],["Ukrayna'nın başkenti?","Kiev (Kyiv)","Harkiv","Odessa",1],["Macaristan'ın başkenti?","Budapeşte","Viyana","Prag",1],["Azerbaycan'ın başkenti?","Bakü","Gence","Tiflis",1],["Irak'ın başkenti?","Bağdat","Basra","Musul",1],["İran'ın başkenti?","Tahran","İsfahan","Şiraz",1],["Atatürk Barajı hangi nehir üzerindedir?","Fırat","Dicle","Kızılırmak",2],["Gaziantep hangi coğrafi bölgededir?","Güneydoğu Anadolu","Akdeniz","Doğu Anadolu",2],["Sivas hangi coğrafi bölgededir?","İç Anadolu","Doğu Anadolu","Karadeniz",2],["Eskişehir hangi coğrafi bölgededir?","İç Anadolu","Marmara","Ege",2],["Bolu hangi coğrafi bölgededir?","Karadeniz","Marmara","İç Anadolu",2],["Hatay hangi coğrafi bölgededir?","Akdeniz","Güneydoğu Anadolu","Ege",2],["Dünyanın en derin okyanus çukuru?","Mariana Çukuru","Puerto Riko Çukuru","Java Çukuru",2],["Dünyanın en büyük adası hangisidir?","Grönland","Madagaskar","Borneo",2],["Belçika'nın başkenti?","Brüksel","Anvers","Brugge",2],["Meksika'nın başkenti?","Meksiko","Kankun","Guadalajara",2],["Küba'nın başkenti?","Havana","Santiago","Kingston",2],["Romanya'nın başkenti?","Bükreş","Sofya","Belgrad",2],["Bulgaristan'ın başkenti?","Sofya","Plovdiv","Varna",2],["Sırbistan'ın başkenti?","Belgrad","Novi Sad","Saraybosna",2],["Suudi Arabistan'ın başkenti?","Riyad","Cidde","Mekke",2],["Afganistan'ın başkenti?","Kabil","Kandahar","Herat",2],["Kütahya hangi coğrafi bölgededir?","Ege","İç Anadolu","Marmara",3],["Kahramanmaraş hangi coğrafi bölgededir?","Akdeniz","Güneydoğu Anadolu","Doğu Anadolu",3],["Adıyaman hangi coğrafi bölgededir?","Güneydoğu Anadolu","Doğu Anadolu","Akdeniz",3],["Ekvator hangi kıtadan geçmez?","Avrupa","Afrika","Güney Amerika",3],["Libya'nın başkenti?","Trablus","Bingazi","Sirte",3],["Sudan'ın başkenti?","Hartum","Port Sudan","Omdurman",3],["Moğolistan'ın başkenti?","Ulan Batur","Astana","Bişkek",3],["Nepal'in başkenti?","Katmandu","Pokhara","Delhi",3],["Tunus'un başkenti?","Tunus","Sfaks","Sus",3]],"genel":[["Gökkuşağında kaç renk vardır?","7","6","8",0],["Suyun kimyasal formülü?","H2O","CO2","O2",0],["Futbolda sahada bir takım kaç kişiyle oynar?","11","10","9",0],["Hangisi daha hızlıdır?","Işık","Ses","İkisi eşit",0],["Kızıl gezegen olarak bilinen gezegen?","Mars","Venüs","Merkür",1],["En büyük gezegen hangisidir?","Jüpiter","Satürn","Mars",1],["Mona Lisa'yı kim yapmıştır?","Leonardo da Vinci","Picasso","Van Gogh",1],["Satranç tahtasında kaç kare vardır?","64","49","81",1],["Yetişkin insanda kaç kemik vardır?","206","186","306",2],["Altının element simgesi?","Au","Ag","Fe",2],["Işık yılı neyin ölçüsüdür?","Mesafe","Zaman","Hız",2],["Ay hangi gezegenin uydusudur?","Dünya","Mars","Venüs",0],["Arılar ne üretir?","Bal","Süt","İpek",0],["Fotosentezde bitkiler hangi gazı alır?","Karbondioksit","Oksijen","Azot",2],["Nobel Edebiyat Ödülü'nü kazanan ilk Türk yazar?","Orhan Pamuk","Yaşar Kemal","Nâzım Hikmet",3],["Atmosferde en çok bulunan gaz?","Azot","Oksijen","Karbondioksit",3],["Güneş ışığıyla ciltte hangi vitamin üretilir?","D vitamini","C vitamini","A vitamini",3],["\"Neşeye Övgü\" hangi senfonide yer alır?","Beethoven 9. Senfoni","Beethoven 5. Senfoni","Mozart 40. Senfoni",3],["Rönesans hangi ülkede başladı?","İtalya","Fransa","İspanya",3],["Türkiye'nin resmî dili nedir?","Türkçe","Arapça","İngilizce",0],["Türkiye'nin para birimi nedir?","Türk lirası","Dinar","Euro",0],["Dünya Güneş'in etrafında yaklaşık kaç günde döner?","365","30","180",0],["Bir futbol maçı normalde kaç dakikadır?","90","80","100",0],["Hangisi bir memelidir?","Yunus","Köpekbalığı","Kartal",1],["Dünyanın en büyük hayvanı hangisidir?","Mavi balina","Fil","Zürafa",1],["Bir üçgenin iç açıları toplamı kaçtır?","180°","360°","90°",1],["Türk alfabesinde kaç harf vardır?","29","28","31",1],["\"Yağmur yağıyor\" cümlesinin yüklemi hangisidir?","yağıyor","Yağmur","cümle",1],["Hangisi bir zıt anlam çiftidir?","Uzun - kısa","Güzel - hoş","Hızlı - çabuk",1],["Basketbolda bir takım sahada kaç oyuncuyla yer alır?","5","6","7",1],["Voleybolda bir takım sahada kaç oyuncuyla yer alır?","6","5","7",1],["İnsan kalbinde kaç odacık vardır?","4","2","3",1],["Hangi gezegenin halkaları en belirgindir?","Satürn","Mars","Merkür",1],["Türkçede kaç ünlü harf vardır?","8","5","10",2],["Türkiye'de yasama yetkisi hangi organa aittir?","TBMM","Cumhurbaşkanlığı","Anayasa Mahkemesi",2],["TBMM kaç milletvekilinden oluşur?","600","550","450",2],["Milletvekili seçilebilmek için asgari yaş kaçtır?","18","25","30",2],["Cumhurbaşkanı kaç yıl için seçilir?","5","4","7",2],["Türkiye'de oy kullanma yaşı kaçtır?","18","21","16",2],["Işık hızı yaklaşık kaç km/sn'dir?","300.000","30.000","3.000",2],["pH değeri 7 olan çözelti nedir?","Nötr","Asit","Baz",2],["Dünyada ana dili olarak en çok konuşulan dil?","Mandarin Çincesi","İngilizce","İspanyolca",2],["Mona Lisa hangi müzede sergilenir?","Louvre","Prado","British Museum",2],["Anayasa Mahkemesi kaç üyeden oluşur?","15","11","17",3],["Türkiye 2018'den beri hangi hükümet sistemiyle yönetilir?","Cumhurbaşkanlığı hükümet sistemi","Parlamenter sistem","Meclis hükümeti sistemi",3],["Oda sıcaklığında sıvı olan metal hangisidir?","Cıva","Demir","Bakır",3],["Newton'un birinci hareket yasası hangisidir?","Eylemsizlik","Etki-tepki","Kütle çekim",3],["Angel Şelalesi hangi ülkededir?","Venezuela","Brezilya","Kolombiya",3],["Anayasa'nın hangi maddeleri değiştirilemez?","1., 2. ve 3. maddeler","4., 5. ve 6. maddeler","Yalnızca 1. madde",3],["Gün batımı hangi yönde görülür?","Batı","Doğu","Kuzey",0],["Su deniz seviyesinde kaç derecede kaynar?","100°C","90°C","50°C",0],["Buz kaç derecede erir?","0°C","10°C","-10°C",0],["Bir saat kaç dakikadır?","60","100","30",0],["\"Ağaç\" sözcüğünün çoğul hâli hangisidir?","Ağaçlar","Ağaçlık","Ağaççı",0],["Türkiye bayrağında hangi semboller vardır?","Ay ve yıldız","Güneş","Kılıç",0],["İstiklal Marşı'nın şairi kimdir?","Mehmet Akif Ersoy","Ziya Gökalp","Namık Kemal",0],["Vücudun en büyük organı hangisidir?","Deri","Karaciğer","Akciğer",1],["Hangisi yenilenebilir enerji kaynağıdır?","Rüzgâr","Kömür","Doğalgaz",1],["Elektrik akımının birimi nedir?","Amper","Volt","Ohm",1],["En sert doğal madde hangisidir?","Elmas","Altın","Demir",1],["Güneş'e en yakın gezegen hangisidir?","Merkür","Venüs","Mars",1],["Güneş sisteminde kaç gezegen vardır?","8","9","7",1],["Dünya kendi ekseni etrafında kaç saatte döner?","24","12","48",1],["Hangisi somut bir isimdir?","Masa","Sevgi","Cesaret",1],["Hangisi soyut bir isimdir?","Cesaret","Masa","Kalem",1],["\"Yıldızlı Gece\" tablosunun ressamı kimdir?","Van Gogh","Monet","Dali",1],["\"Hamlet\" oyununun yazarı kimdir?","Shakespeare","Moliere","Goethe",1],["Mevlânâ'nın türbesi hangi şehirdedir?","Konya","Bursa","Ankara",1],["İnsan vücudundaki en uzun kemik hangisidir?","Uyluk kemiği","Kaval kemiği","Kol kemiği",2],["Bitkiler fotosentezde hangi gazı üretir?","Oksijen","Karbondioksit","Azot",2],["Atom numarası 1 olan element hangisidir?","Hidrojen","Helyum","Oksijen",2],["Kanı süzerek temizleyen organ hangisidir?","Böbrek","Mide","Kalp",2],["Türkiye'de zorunlu eğitim kaç yıldır?","12","8","10",2],["İstiklal Marşı hangi yıl kabul edildi?","1921","1923","1919",2],["Türkiye hangi tür bir devlettir?","Demokratik, laik, sosyal hukuk devleti","Dini devlet","Federal devlet",2],["\"-ler/-lar\" eki hangi anlamı katar?","Çoğul","Küçültme","Aitlik",2],["\"Çalıkuşu\" romanının yazarı kimdir?","Reşat Nuri Güntekin","Halide Edib Adıvar","Yakup Kadri Karaosmanoğlu",2],["\"İnce Memed\" romanının yazarı kimdir?","Yaşar Kemal","Kemal Tahir","Orhan Pamuk",2],["Türkçede kaç ünsüz harf vardır?","21","18","23",3],["Sesin en hızlı yayıldığı ortam hangisidir?","Katı","Sıvı","Gaz",3],["Evrensel kan verici kan grubu hangisidir?","0 Rh-","AB Rh+","A Rh+",3],["Cumhurbaşkanı seçilebilmek için asgari yaş kaçtır?","40","35","45",3],["İstiklal Marşı'nın bugünkü bestecisi kimdir?","Osman Zeki Üngör","Ali Rıfat Çağatay","Cemal Reşit Rey",3],["Kanunların Anayasa'ya uygunluğunu hangi kurum denetler?","Anayasa Mahkemesi","Danıştay","Yargıtay",3],["Danıştay hangi yargı kolunun en yüksek mahkemesidir?","İdari yargı","Adli yargı","Anayasa yargısı",3],["Yargıtay hangi yargı kolunda yer alır?","Adli yargı","İdari yargı","Askeri yargı",3],["\"Kuyucaklı Yusuf\" romanının yazarı kimdir?","Sabahattin Ali","Orhan Kemal","Yaşar Kemal",3],["\"Sinekli Bakkal\" romanının yazarı kimdir?","Halide Edib Adıvar","Reşat Nuri Güntekin","Peyami Safa",3],["Türkiye'nin yerli elektrikli otomobili hangisidir?","Togg","Anadol","Tofaş",0],["2024 Yaz Olimpiyatları hangi şehirde yapıldı?","Paris","Tokyo","Los Angeles",0],["2022 Dünya Kupası'nı kim kazandı?","Arjantin","Fransa","Brezilya",1],["EURO 2024 şampiyonu kim oldu?","İspanya","İngiltere","Fransa",1],["Kahramanmaraş depremleri hangi tarihte oldu?","6 Şubat 2023","17 Ağustos 1999","23 Ekim 2011",1],["Dünya nüfusu 8 milyarı hangi yıl aştı?","2022","2018","2025",2],["EURO 2024'e hangi ülke ev sahipliği yaptı?","Almanya","Fransa","İtalya",2],["2024 Nobel Fizik Ödülü hangi alanla ilgilidir?","Yapay sinir ağları","Kara delikler","Kuantum bilgisayar",3],["2024 Nobel Barış Ödülü'nü kim aldı?","Nihon Hidankyo","Birleşmiş Milletler","Kızılhaç",3],["COP29 hangi ülkede yapıldı?","Azerbaycan","BAE","Brezilya",3],["2024 Paris Olimpiyatları'nda en çok madalya alan ülke?","ABD","Çin","Japonya",3],["En çok kullanılan video paylaşım sitesi hangisidir?","YouTube","Vimeo","Twitch",0],["İngiltere'nin AB'den ayrılma süreci nasıl adlandırılır?","Brexit","Grexit","Frexit",1],["COVID-19 ilk olarak hangi şehirde tespit edildi?","Wuhan","Pekin","Şanghay",1],["2022 Dünya Kupası hangi ülkede yapıldı?","Katar","Rusya","Brezilya",1],["2020 Tokyo Olimpiyatları hangi yıl yapıldı?","2021","2020","2022",2],["Türkiye'nin milli savaş uçağı projesinin adı nedir?","KAAN","Hürjet","Anka",2],["Türkiye'de 14 Mayıs seçimleri hangi yıl yapıldı?","2023","2021","2025",2],["2018 Dünya Kupası hangi ülkede yapıldı?","Rusya","Katar","Fransa",2],["EURO 2020 turnuvasını hangi ülke kazandı?","İtalya","İngiltere","Fransa",2],["2026 Dünya Kupası'na hangi ülkeler ev sahipliği yapıyor?","ABD, Kanada ve Meksika","Almanya ve Fransa","Japonya ve Güney Kore",3],["COVID-19 pandemisi hangi yıl ilan edildi?","2020","2018","2022",1],["Rusya'nın Ukrayna'ya geniş çaplı saldırısı hangi yıl başladı?","2022","2020","2024",2],["EURO 2024'te Türkiye hangi turda elendi?","Çeyrek final","Yarı final","Grup aşaması",3],["EURO 2024 finali hangi şehirde oynandı?","Berlin","Münih","Hamburg",3],["2023 Kadınlar Dünya Kupası'nı kim kazandı?","İspanya","İngiltere","ABD",3]],"bilim":[["James Webb Uzay Teleskobu hangi yıl fırlatıldı?","2021","2015","2018",2],["Alper Gezeravcı hangi alanda ilk Türk oldu?","Uzaya giden ilk Türk astronot","Everest'e çıkan ilk Türk","Kutba giden ilk Türk",3],["Artemis programı hangi gök cismini hedefler?","Ay","Mars","Jüpiter",2],["Perseverance aracı hangi yıl Mars'a indi?","2021","2018","2023",3],["Dünyayı çevreleyen gaz tabakasına ne denir?","Atmosfer","Litosfer","Hidrosfer",0],["Suyun katı hâline ne denir?","Buz","Buhar","Sis",0],["Bitkilerin ışıkla besin üretmesine ne denir?","Fotosentez","Solunum","Terleme",0],["Hangisi bir gezegendir?","Mars","Ay","Güneş",0],["Klasik anlatımda insanın kaç duyusu vardır?","5","3","7",0],["Mıknatıs hangi metali çeker?","Demir","Alüminyum","Bakır",0],["Hangisi daha hızlıdır?","Işık","Ses","İkisi aynı hızdadır",0],["Hangisi bir canlıdır?","Ağaç","Taş","Su",0],["Atomun merkezinde ne bulunur?","Çekirdek","Elektron","Zar",1],["Solunumda hangi gaz kullanılır?","Oksijen","Azot","Helyum",1],["DNA hücrenin hangi bölümünde bulunur?","Çekirdek","Koful","Hücre duvarı",1],["Hangisi bir kuvvet birimidir?","Newton","Joule","Watt",1],["Hangi kan hücresi oksijen taşır?","Alyuvar","Akyuvar","Trombosit",1],["Hangisi yenilenemez enerji kaynağıdır?","Kömür","Güneş","Rüzgâr",1],["Işığın ortam değiştirirken yön değiştirmesine ne denir?","Kırılma","Yansıma","Soğurma",1],["Güneş'e en yakın gezegen hangisidir?","Merkür","Venüs","Mars",1],["Periyodik tabloda sembolü Fe olan element hangisidir?","Demir","Flor","Fosfor","Fermiyum",2],["Hücrenin enerji santrali olarak bilinen organel?","Mitokondri","Ribozom","Lizozom","Golgi aygıtı",2],["Elektrik direncinin birimi nedir?","Ohm","Volt","Amper","Watt",2],["Güneş sisteminin en yoğun gezegeni hangisidir?","Dünya","Jüpiter","Merkür","Mars",2],["Hangi vitamin eksikliği iskorbüte yol açar?","C vitamini","A vitamini","D vitamini","B12 vitamini",2],["İnsan hücresinde kaç çift kromozom bulunur?","23","22","24","46",2],["Sera etkisinin başlıca sebeplerinden biri hangi gazdır?","Karbondioksit","Argon","Neon","Helyum",2],["Hangi organ insülin hormonunu üretir?","Pankreas","Karaciğer","Böbrek","Mide",2],["Işığın boşluktaki hızı yaklaşık kaç km/sn'dir?","300.000","150.000","30.000","3.000.000",3],["Atom çekirdeğinde bulunan yüksüz parçacık hangisidir?","Nötron","Proton","Elektron","Pozitron",3],["Suyun yarı geçirgen zardan geçişine ne denir?","Osmoz","Fagositoz","Aktif taşıma","Mayoz",3],["Newton'un ikinci yasasına göre kuvvet neye eşittir?","Kütle × ivme","Kütle × hız","Basınç × alan","Güç × zaman",3],["Atom numarası 6 olan element hangisidir?","Karbon","Azot","Oksijen","Bor",3],["Genel görelilik kuramını kim geliştirmiştir?","Albert Einstein","Niels Bohr","Max Planck","Isaac Newton",3],["Mayoz bölünmede kromozom sayısı nasıl değişir?","Yarıya iner","İki katına çıkar","Aynı kalır","Üç katına çıkar",3],["Hangi bilim insanı evrim kuramıyla tanınır?","Charles Darwin","Gregor Mendel","Louis Pasteur","Carl Linnaeus",3]],"tek":[["Dünyada en çok kullanılan arama motoru?","Google","Bing","Yahoo",0],["ChatGPT'yi hangi şirket geliştirdi?","OpenAI","Google","Apple",0],["Instagram ve WhatsApp hangi şirkete aittir?","Meta","Google","Microsoft",1],["Twitter'ın adı 2023'te neye dönüştürüldü?","X","Threads","Tweet",2],["Yerli otomobil Togg hangi ilde üretilir?","Bursa","İstanbul","Ankara",0],["Android işletim sistemi hangi şirkete aittir?","Google","Apple","Microsoft",0],["Bayraktar TB2 nedir?","Silahlı insansız hava aracı","Zırhlı araç","Denizaltı",1],["ChatGPT hangi yıl yayınlandı?","2022","2018","2015",1],["Türksat 6A uydusu hangi yıl fırlatıldı?","2024","2020","2022",3],["iPhone hangi şirketin ürünüdür?","Apple","Samsung","Google",0],["Windows işletim sistemi hangi şirkete aittir?","Microsoft","Apple","Google",0],["Facebook'un kurucusu kimdir?","Mark Zuckerberg","Jeff Bezos","Bill Gates",0],["Amazon'un kurucusu kimdir?","Jeff Bezos","Elon Musk","Mark Zuckerberg",1],["Tesla'nın CEO'su kimdir?","Elon Musk","Jeff Bezos","Bill Gates",1],["TikTok hangi ülkede kurulan bir şirkete aittir?","Çin","ABD","Japonya",2],["\"Gemini\" yapay zekâ modeli hangi şirkete aittir?","Google","OpenAI","Meta",2],["\"Claude\" yapay zekâ modeli hangi şirkete aittir?","Anthropic","OpenAI","Google",2],["Bitcoin'in yaratıcısının kullandığı takma ad nedir?","Satoshi Nakamoto","Vitalik Buterin","Elon Musk",2],["İstanbul Havalimanı hangi yıl açıldı?","2018","2015","2020",2],["1915 Çanakkale Köprüsü hangi yıl açıldı?","2022","2018","2020",3],["Yavuz Sultan Selim Köprüsü hangi yıl açıldı?","2016","2013","2018",3],["Marmaray hangi yıl açıldı?","2013","2009","2016",3],["Bilgisayarın ana işlem birimine ne denir?","İşlemci","Fare","Kasa",0],["Hangisi bir internet tarayıcısıdır?","Chrome","Word","Excel",0],["Hangisi bir sosyal medya uygulamasıdır?","Instagram","Hesap makinesi","Saat",0],["Fare ne için kullanılır?","İmleci hareket ettirmek","Yazı yazmak","Ses vermek",0],["Wi-Fi ne sağlar?","Kablosuz internet","Elektrik","Isıtma",0],["Hangisi bir mesajlaşma uygulamasıdır?","WhatsApp","Photoshop","Excel",0],["QR kod ne işe yarar?","Bilgiyi tarayarak okutmak","Müzik çalmak","Resim boyamak",0],["E-posta adresinde hangi işaret bulunur?","@","#","&",1],["HTML ne için kullanılır?","Web sayfası oluşturmak","Video düzenlemek","Ses kaydetmek",1],["Bilgisayarda 1 bayt kaç bittir?","8","4","16",1],["Hangisi bir işletim sistemidir?","Linux","Chrome","Excel",1],["GPS ne yapar?","Konum belirler","Ses kaydeder","Isı ölçer",1],["Hangisi bir programlama dilidir?","Python","Photoshop","Chrome",1],["3D yazıcı ne üretir?","Üç boyutlu nesneler","Sadece fotoğraf","Ses",1],["ChatGPT hangi tür bir sistemdir?","Büyük dil modeli","Arama motoru","Tarayıcı","İşletim sistemi",2],["Alan adlarını IP adreslerine çeviren sistem hangisidir?","DNS","HTTP","FTP","VPN",2],["Geçici veri tutan bilgisayar belleği hangisidir?","RAM","SSD","HDD","CD",2],["HTTPS'teki \"S\" neyi ifade eder?","Güvenli (Secure)","Sunucu (Server)","Hız (Speed)","Yazılım (Software)",2],["Bitcoin hangi teknolojiyi kullanır?","Blokzincir","Bulut","Fiber","Lazer",2],["Hangisi bir veritabanı sorgu dilidir?","SQL","HTML","CSS","XML",2],["Kimlik avı saldırısına İngilizce ne denir?","Phishing","Spam","Firewall","Backup",2],["5G neyi ifade eder?","Beşinci nesil mobil iletişim","5 gigabayt hız","5 kanallı ağ","Beşinci güncelleme",2],["Kuantum bilgisayarlarda bilgi birimi nedir?","Kübit","Bit","Bayt","Nibble",3],["Verilerin paketlere bölünerek taşınmasını sağlayan temel protokol ailesi?","TCP/IP","USB","HDMI","Bluetooth",3],["Açık anahtarlı şifrelemede kullanılan algoritmalardan biri?","RSA","HTML","MP3","PNG",3],["Git hangi amaçla kullanılır?","Sürüm kontrolü","Video kodlama","Ağ güvenliği","Grafik tasarım",3],["Evrişimli sinir ağları en çok hangi alanda kullanılır?","Görüntü işleme","Ses kaydı","Metin yazımı","Elektrik üretimi",3],["Moore yasası neyle ilgilidir?","Transistör sayısının artışı","Pil ömrü","İnternet hızı","Ekran boyutu",3],["World Wide Web'in mucidi kimdir?","Tim Berners-Lee","Bill Gates","Steve Jobs","Linus Torvalds",3],["Linux çekirdeğini kim geliştirdi?","Linus Torvalds","Dennis Ritchie","Bill Joy","Ken Thompson",3]]};
+
+// ===== Yardımcılar =====
+const $=id=>document.getElementById(id);
+const rnd=n=>Math.floor(Math.random()*n),rr=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const cv=$('c'),ctx=cv.getContext('2d'),hud=$('hud'),msg=$('msg'),quiz=$('quiz'),banner=$('banner'),bctx=$('bc').getContext('2d');
+let W=0,H=0;
+function resize(){const d=Math.min(devicePixelRatio||1,2.5);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
+addEventListener('resize',resize);resize();
+// ===== Ses =====
+let ac=null,muted=LS.get('bk_mute',false);
+function snd(f,d=.1,type='sine',v=.07,f2){if(!ac||muted)return;try{const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.linearRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(t+d)}catch(e){}}
+// ===== Çizim kütüphanesi (kod ile vektör çizim) =====
+const D={};
+function starPath(c,x,y,r1,r2,n,rot=-Math.PI/2){c.beginPath();for(let i=0;i<n*2;i++){const a=rot+i*Math.PI/n,r=i%2?r2:r1;c.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r)}c.closePath()}
+D.coin=(c,x,y,r)=>{c.save();c.shadowColor='#ffd23f';c.shadowBlur=r*.9;const g=c.createRadialGradient(x-r*.35,y-r*.4,r*.1,x,y,r);g.addColorStop(0,'#fff6bd');g.addColorStop(.5,'#ffc933');g.addColorStop(1,'#c98a00');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();c.restore();
+ c.strokeStyle='#b57700';c.lineWidth=r*.14;c.beginPath();c.arc(x,y,r*.9,0,7);c.stroke();c.strokeStyle='rgba(255,255,255,.6)';c.lineWidth=r*.1;c.beginPath();c.arc(x,y,r*.66,.9,2.3);c.stroke();
+ c.fillStyle='rgba(165,105,0,.6)';starPath(c,x,y,r*.46,r*.2,5);c.fill()};
+D.heart=(c,x,y,r)=>{c.save();c.translate(x,y+r*.08);c.scale(r/10.5,r/10.5);c.beginPath();c.moveTo(0,-3);c.bezierCurveTo(0,-9,-10,-9,-10,-2);c.bezierCurveTo(-10,4,-3,8,0,12);c.bezierCurveTo(3,8,10,4,10,-2);c.bezierCurveTo(10,-9,0,-9,0,-3);c.closePath();
+ const g=c.createRadialGradient(-3,-4,1,0,2,15);g.addColorStop(0,'#ff8fa0');g.addColorStop(.5,'#e8203c');g.addColorStop(1,'#8f0f24');c.shadowColor='#ff3b5c';c.shadowBlur=14;c.fillStyle=g;c.fill();c.shadowBlur=0;c.lineWidth=.8;c.strokeStyle='#5c0716';c.stroke();
+ c.fillStyle='rgba(255,255,255,.6)';c.beginPath();c.ellipse(-5.2,-4.6,2.6,1.6,-.6,0,7);c.fill();c.restore()};
+D.shield=(c,x,y,r)=>{c.save();c.translate(x,y);c.scale(r/12,r/12);c.beginPath();c.moveTo(0,-12);c.lineTo(10,-8);c.lineTo(10,0);c.bezierCurveTo(10,7,5,11,0,13);c.bezierCurveTo(-5,11,-10,7,-10,0);c.lineTo(-10,-8);c.closePath();
+ const g=c.createLinearGradient(-10,-12,10,13);g.addColorStop(0,'#a8ecff');g.addColorStop(.5,'#2f9bff');g.addColorStop(1,'#14378f');c.shadowColor='#45b6ff';c.shadowBlur=14;c.fillStyle=g;c.fill();c.shadowBlur=0;c.lineWidth=1.5;c.strokeStyle='#dff7ff';c.stroke();
+ c.beginPath();c.moveTo(0,-12);c.lineTo(0,13);c.moveTo(-10,-1);c.lineTo(10,-1);c.strokeStyle='rgba(255,255,255,.4)';c.lineWidth=1;c.stroke();c.restore()};
+D.glass=(c,x,y,r)=>{c.save();c.translate(x,y);c.scale(r/12,r/12);c.fillStyle='#8b5a2b';c.fillRect(-9,-12,18,3);c.fillRect(-9,9,18,3);
+ c.beginPath();c.moveTo(-7,-9);c.lineTo(7,-9);c.lineTo(1.2,0);c.lineTo(7,9);c.lineTo(-7,9);c.lineTo(-1.2,0);c.closePath();c.fillStyle='rgba(205,236,255,.4)';c.fill();c.strokeStyle='#d6efff';c.lineWidth=1.2;c.stroke();
+ c.fillStyle='#ffcf5a';c.beginPath();c.moveTo(-4.8,-8);c.lineTo(4.8,-8);c.lineTo(.4,-2);c.lineTo(-.4,-2);c.closePath();c.fill();c.beginPath();c.moveTo(-6,8);c.lineTo(6,8);c.lineTo(0,2.6);c.closePath();c.fill();c.restore()};
+D.magnet=(c,x,y,r)=>{c.save();c.translate(x,y);c.shadowColor='#ff5a5a';c.shadowBlur=r*.7;c.lineCap='butt';c.lineWidth=r*.55;c.strokeStyle='#d62839';c.beginPath();c.moveTo(-r*.62,r*.55);c.lineTo(-r*.62,r*.05);c.arc(0,r*.05,r*.62,Math.PI,0);c.lineTo(r*.62,r*.55);c.stroke();c.shadowBlur=0;
+ c.fillStyle='#eef3f9';c.fillRect(-r*.9,r*.5,r*.56,r*.4);c.fillRect(r*.34,r*.5,r*.56,r*.4);c.strokeStyle='rgba(255,255,255,.45)';c.lineWidth=r*.1;c.beginPath();c.arc(0,r*.05,r*.7,Math.PI*1.15,Math.PI*1.65);c.stroke();c.restore()};
+D.star=(c,x,y,r)=>{c.save();c.shadowColor='#ffd23f';c.shadowBlur=r*.9;const g=c.createRadialGradient(x-r*.2,y-r*.25,r*.1,x,y,r*1.1);g.addColorStop(0,'#fffbd0');g.addColorStop(.55,'#ffd23f');g.addColorStop(1,'#e08a00');c.fillStyle=g;starPath(c,x,y+r*.05,r*1.05,r*.46,5);c.fill();c.lineWidth=r*.07;c.strokeStyle='#b86e00';c.lineJoin='round';c.stroke();c.restore()};
+D.galaxy=(c,x,y,r,t=0)=>{c.save();const g=c.createRadialGradient(x,y,0,x,y,r*1.3);g.addColorStop(0,'rgba(255,255,255,.95)');g.addColorStop(.18,'rgba(196,150,255,.9)');g.addColorStop(.55,'rgba(80,60,210,.5)');g.addColorStop(1,'rgba(20,10,80,0)');c.fillStyle=g;c.beginPath();c.arc(x,y,r*1.3,0,7);c.fill();
+ for(let a=0;a<3;a++)for(let i=0;i<46;i++){const k=i/46,ang=a*2.094+k*5.2+t*.8,rad=k*r;c.fillStyle='rgba('+(150+k*100|0)+','+(190+k*60|0)+',255,'+((1-k*.55)*.9).toFixed(2)+')';c.beginPath();c.arc(x+Math.cos(ang)*rad,y+Math.sin(ang)*rad,r*(.07-.03*k),0,7);c.fill()}
+ c.fillStyle='#fff';c.beginPath();c.arc(x,y,r*.12,0,7);c.fill();c.restore()};
+const CC={mat:'#ff8a1f',tarih:'#c98a3b',cog:'#2fbf71',genel:'#ffd23f',bilim:'#4aa8ff',tek:'#a266ff'};
+D.cat=(c,id,x,y,r)=>{const col=CC[id];c.save();c.shadowColor=col;c.shadowBlur=r*.9;const g=c.createRadialGradient(x-r*.3,y-r*.35,r*.05,x,y,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,'#14182e');c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();c.shadowBlur=0;c.lineWidth=r*.08;c.strokeStyle='rgba(255,255,255,.8)';c.stroke();
+ c.strokeStyle='#fff';c.fillStyle='#fff';c.lineWidth=r*.11;c.lineCap='round';c.lineJoin='round';
+ if(id==='mat'){c.beginPath();c.moveTo(x-r*.42,y-r*.1);c.lineTo(x+r*.42,y-r*.1);c.moveTo(x,y-r*.52);c.lineTo(x,y+r*.32);c.moveTo(x-r*.42,y+r*.5);c.lineTo(x+r*.42,y+r*.5);c.stroke()}
+ else if(id==='tarih'){c.globalAlpha=.95;c.beginPath();c.moveTo(x-r*.05,y-r*.38);c.lineTo(x-r*.58,y-r*.25);c.lineTo(x-r*.58,y+r*.42);c.lineTo(x-r*.05,y+r*.55);c.closePath();c.fill();c.beginPath();c.moveTo(x+r*.05,y-r*.38);c.lineTo(x+r*.58,y-r*.25);c.lineTo(x+r*.58,y+r*.42);c.lineTo(x+r*.05,y+r*.55);c.closePath();c.fill();c.globalAlpha=1}
+ else if(id==='cog'){c.beginPath();c.arc(x,y,r*.5,0,7);c.stroke();c.beginPath();c.ellipse(x,y,r*.22,r*.5,0,0,7);c.stroke();c.beginPath();c.moveTo(x-r*.5,y);c.lineTo(x+r*.5,y);c.stroke()}
+ else if(id==='genel'){c.beginPath();c.arc(x,y-r*.1,r*.36,0,7);c.fill();c.fillRect(x-r*.17,y+r*.28,r*.34,r*.14);c.fillRect(x-r*.12,y+r*.46,r*.24,r*.1)}
+ else if(id==='bilim'){c.lineWidth=r*.08;for(let i=0;i<3;i++){c.beginPath();c.ellipse(x,y,r*.55,r*.2,i*Math.PI/3,0,7);c.stroke()}c.beginPath();c.arc(x,y,r*.12,0,7);c.fill()}
+ else{c.lineWidth=r*.09;c.strokeRect(x-r*.3,y-r*.3,r*.6,r*.6);c.fillRect(x-r*.14,y-r*.14,r*.28,r*.28);for(let i=-1;i<=1;i+=1){c.beginPath();c.moveTo(x+i*r*.18,y-r*.3);c.lineTo(x+i*r*.18,y-r*.5);c.moveTo(x+i*r*.18,y+r*.3);c.lineTo(x+i*r*.18,y+r*.5);c.moveTo(x-r*.3,y+i*r*.18);c.lineTo(x-r*.5,y+i*r*.18);c.moveTo(x+r*.3,y+i*r*.18);c.lineTo(x+r*.5,y+i*r*.18);c.stroke()}}
+ c.restore()};
+// ===== Roketler =====
+const RP=[{b:['#ffffff','#c5cdd8'],a:'#e63946'},{b:['#ffffff','#b5c8ea'],a:'#2f80ed'},{b:['#eef3f8','#8796ad'],a:'#14b8a6'},{b:['#f6eaff','#a98bd6'],a:'#8b5cf6'},{b:['#fff2b8','#e0a800'],a:'#b45309'},{b:['#1e293b','#64748b'],a:'#22d3ee'}];
+const RN=['Başlangıç','Mavi Şimşek','Çelik Kanat','Mor Nova','Altın Kartal','Galaksi Lordu'],PR=[0,1000,2500,5000,10000,20000];
+D.rocket=(c,x,y,s,lv,t=0,flame=true)=>{const p=RP[lv];c.save();c.translate(x,y);c.scale(s,s);
+ if(lv>=3){const g=c.createRadialGradient(0,0,6,0,0,48);g.addColorStop(0,p.a+'66');g.addColorStop(1,p.a+'00');c.fillStyle=g;c.beginPath();c.arc(0,0,48,0,7);c.fill()}
+ if(flame){const fl=(14+7*Math.sin(t*38)+lv*2.5)*1.5;for(const ox of (lv>=4?[-5,5]:[0])){const g=c.createLinearGradient(0,18,0,18+fl);g.addColorStop(0,lv>=3?'#d4f1ff':'#fff3b0');g.addColorStop(.4,lv>=3?'#3aa0ff':'#ffa51f');g.addColorStop(1,'rgba(255,60,0,0)');c.fillStyle=g;c.beginPath();c.moveTo(ox-5,18);c.quadraticCurveTo(ox,18+fl*1.4,ox+5,18);c.closePath();c.fill()}}
+ c.fillStyle=p.a;
+ for(const sd of [-1,1]){c.save();c.scale(sd,1);c.beginPath();if(lv>=3){c.moveTo(8,-4);c.lineTo(28,22);c.lineTo(22,24);c.lineTo(8,16)}else{c.moveTo(8,4);c.lineTo(19,22);c.lineTo(8,16)}c.closePath();c.fill();c.restore()}
+ if(lv>=2){for(const sd of [-1,1]){const g=c.createLinearGradient(sd*11,0,sd*17,0);g.addColorStop(0,RP[lv].b[0]);g.addColorStop(1,RP[lv].b[1]);c.fillStyle=g;c.beginPath();c.ellipse(sd*13.5,6,3.4,12,0,0,7);c.fill();c.fillStyle=p.a;c.beginPath();c.arc(sd*13.5,-5,3.2,0,7);c.fill()}}
+ const bg=c.createLinearGradient(-10,0,10,0);bg.addColorStop(0,p.b[1]);bg.addColorStop(.45,p.b[0]);bg.addColorStop(1,p.b[1]);c.fillStyle=bg;c.beginPath();c.moveTo(0,-30);c.bezierCurveTo(12,-18,11,6,9,18);c.lineTo(-9,18);c.bezierCurveTo(-11,6,-12,-18,0,-30);c.closePath();c.fill();c.strokeStyle='rgba(0,0,0,.28)';c.lineWidth=.8;c.stroke();
+ c.fillStyle=p.a;c.beginPath();c.moveTo(0,-30);c.bezierCurveTo(6,-24,8,-18,8.6,-14);c.lineTo(-8.6,-14);c.bezierCurveTo(-8,-18,-6,-24,0,-30);c.fill();
+ if(lv>=1){c.fillRect(-9.6,9,19.2,3);if(lv>=4){c.fillStyle='#fff3b0';c.fillRect(-9.6,14,19.2,1.5)}}
+ const wg=c.createRadialGradient(-2,-6,1,0,-4,6.5);wg.addColorStop(0,'#eafcff');wg.addColorStop(.6,'#4cc3ff');wg.addColorStop(1,'#0b4d8a');c.fillStyle=wg;c.beginPath();c.arc(0,-4,5.3,0,7);c.fill();c.strokeStyle=lv>=4?'#ffd23f':'#8da2b8';c.lineWidth=1.4;c.stroke();
+ if(lv>=5){c.strokeStyle='rgba(34,211,238,.85)';c.lineWidth=1.4;c.beginPath();c.ellipse(0,-2,28,9,t*2.5,0,7);c.stroke();c.beginPath();c.ellipse(0,-2,28,9,-t*2.5+1,0,7);c.stroke()}
+ c.restore()};
+// ===== Yaratıklar =====
+const CRE=[
+{n:'Kıvılcım',d:'Yavaş ve düz düşer. Alışma turu.',r:15,sp:1,dm:1,draw(c,x,y,r,t){c.save();c.shadowColor='#ff3300';c.shadowBlur=r*1.4;const g=c.createRadialGradient(x,y,0,x,y,r*1.2);g.addColorStop(0,'#fff6c8');g.addColorStop(.35,'#ffb020');g.addColorStop(1,'#d9261c');c.fillStyle=g;starPath(c,x,y,r*1.25,r*.55,8,t*2);c.fill();c.restore()}},
+{n:'Bomba',d:'Çok hızlı düşer, erken hareket et.',r:15,sp:1.55,dm:1,draw(c,x,y,r,t){c.save();c.shadowColor='#ff2a1a';c.shadowBlur=r;const g=c.createRadialGradient(x-r*.3,y-r*.3,r*.1,x,y+r*.1,r);g.addColorStop(0,'#7b8493');g.addColorStop(1,'#0b0d12');c.fillStyle=g;c.beginPath();c.arc(x,y+r*.12,r*.92,0,7);c.fill();c.restore();
+ c.strokeStyle='#caa24a';c.lineWidth=r*.18;c.lineCap='round';c.beginPath();c.moveTo(x+r*.2,y-r*.7);c.quadraticCurveTo(x+r*.5,y-r*1.2,x+r*.9,y-r*1.0);c.stroke();const f=.75+.25*Math.sin(t*30);c.fillStyle='#ffd23f';starPath(c,x+r*.9,y-r*1.0,r*.42*f,r*.14,6,t*6);c.fill();
+ c.fillStyle='rgba(255,255,255,.28)';c.beginPath();c.ellipse(x-r*.36,y-r*.3,r*.22,r*.14,-.6,0,7);c.fill()}},
+{n:'Gölge',d:'Zikzak çizerek ilerler, yolunu tahmin et.',r:17,sp:1.05,dm:1,draw(c,x,y,r,t){c.save();c.shadowColor='#ff2a4a';c.shadowBlur=r;const g=c.createRadialGradient(x,y-r*.2,r*.1,x,y,r*1.2);g.addColorStop(0,'#5b2a86');g.addColorStop(1,'#12061f');c.fillStyle=g;starPath(c,x,y,r*1.2,r*.82,11,t*1.5);c.fill();c.restore();
+ for(const sd of [-1,1]){c.fillStyle='#ffe14a';c.beginPath();c.ellipse(x+sd*r*.36,y-r*.12,r*.2,r*.28,sd*.3,0,7);c.fill();c.fillStyle='#240a0a';c.beginPath();c.arc(x+sd*r*.36,y-r*.06,r*.08,0,7);c.fill()}
+ c.strokeStyle='#ffe14a';c.lineWidth=r*.09;c.lineJoin='round';c.beginPath();c.moveTo(x-r*.5,y+r*.38);for(let i=1;i<=5;i++)c.lineTo(x-r*.5+i*r*.2,y+r*(i%2?.55:.35));c.stroke()}},
+{n:'Göktaşı',d:'Ağırdır ama çarparsa 2 can götürür.',r:24,sp:.6,dm:2,draw(c,x,y,r,t,it){c.save();c.translate(x,y);c.rotate(t*.9);c.shadowColor='#ff6a00';c.shadowBlur=r*.9;const g=c.createRadialGradient(-r*.3,-r*.3,r*.1,0,0,r*1.1);g.addColorStop(0,'#a8927f');g.addColorStop(.6,'#5d4a3d');g.addColorStop(1,'#241a14');c.fillStyle=g;c.beginPath();const sd=it?it.ph:1;for(let i=0;i<10;i++){const a=i*Math.PI/5,k=.82+.2*Math.sin(i*2.3+sd);c.lineTo(Math.cos(a)*r*k,Math.sin(a)*r*k)}c.closePath();c.fill();c.shadowBlur=0;c.strokeStyle='rgba(255,120,30,.8)';c.lineWidth=2;c.stroke();c.fillStyle='rgba(0,0,0,.35)';for(const [a,b,k] of [[-.3,-.1,.2],[.3,.25,.15],[-.1,.4,.12]]){c.beginPath();c.arc(a*r,b*r,k*r,0,7);c.fill()}c.restore()}},
+{n:'Yarasa',d:'Geniş salınımlarla uçar, ekranı tarar.',r:18,sp:1.2,dm:1,draw(c,x,y,r,t){const f=Math.sin(t*14)*.35;c.save();c.translate(x,y);c.shadowColor='#ff2a4a';c.shadowBlur=r*.8;c.fillStyle='#2a1038';for(const sd of [-1,1]){c.save();c.scale(sd,1);c.beginPath();c.moveTo(r*.2,0);c.quadraticCurveTo(r*1.0,-r*(.9+f),r*1.75,-r*(.25+f*.5));c.quadraticCurveTo(r*1.4,r*.05,r*1.15,r*.2);c.quadraticCurveTo(r*.85,r*.0,r*.6,r*.35);c.quadraticCurveTo(r*.4,r*.1,r*.2,r*.4);c.closePath();c.fill();c.restore()}
+ c.fillStyle='#3b1a52';c.beginPath();c.ellipse(0,r*.1,r*.4,r*.55,0,0,7);c.fill();c.beginPath();c.moveTo(-r*.3,-r*.35);c.lineTo(-r*.2,-r*.75);c.lineTo(-r*.02,-r*.4);c.moveTo(r*.3,-r*.35);c.lineTo(r*.2,-r*.75);c.lineTo(r*.02,-r*.4);c.fill();c.shadowBlur=0;c.fillStyle='#ff3b3b';c.beginPath();c.arc(-r*.16,-r*.12,r*.08,0,7);c.arc(r*.16,-r*.12,r*.08,0,7);c.fill();c.restore()}},
+{n:'Hayalet',d:'Yarı saydamdır, bir görünür bir kaybolur.',r:18,sp:.85,dm:1,draw(c,x,y,r,t){c.save();c.shadowColor='#ff4a6a';c.shadowBlur=r;const g=c.createLinearGradient(0,y-r,0,y+r);g.addColorStop(0,'rgba(245,252,255,.95)');g.addColorStop(1,'rgba(150,190,255,.7)');c.fillStyle=g;c.beginPath();c.arc(x,y-r*.1,r*.9,Math.PI,0);c.lineTo(x+r*.9,y+r*.95);c.quadraticCurveTo(x+r*.6,y+r*.65,x+r*.3,y+r*.95);c.quadraticCurveTo(x,y+r*.65,x-r*.3,y+r*.95);c.quadraticCurveTo(x-r*.6,y+r*.65,x-r*.9,y+r*.95);c.closePath();c.fill();c.restore();
+ c.fillStyle='#1a1030';c.beginPath();c.ellipse(x-r*.3,y-r*.15,r*.14,r*.22,0,0,7);c.ellipse(x+r*.3,y-r*.15,r*.14,r*.22,0,0,7);c.fill();c.beginPath();c.ellipse(x,y+r*.3,r*.13,r*.19,0,0,7);c.fill()}}
+];
+// ===== Temalar =====
+const THEMES=[{n:'Gece Gökyüzü',a:[7,13,36],b:[27,44,102],p:'star',h:0},{n:'Kızıl Dağlar',a:[29,15,31],b:[107,42,58],p:'ember',h:1},{n:'Derin Okyanus',a:[3,26,43],b:[11,92,122],p:'bubble',h:2},{n:'Gece Ormanı',a:[6,33,15],b:[29,107,58],p:'firefly',h:3},{n:'Çöl',a:[42,22,6],b:[168,90,28],p:'dust',h:4},{n:'Buzul',a:[10,29,51],b:[74,163,201],p:'snow',h:5},{n:'Kozmos',a:[20,6,43],b:[91,31,166],p:'star',h:6}];
+// ===== Simge önbelleği =====
+const IC={};
+function icon(name,size=44){const k=name+'|'+size;if(IC[k])return IC[k];const cn=document.createElement('canvas');cn.width=cn.height=size*2;const c=cn.getContext('2d');c.scale(2,2);const x=size/2,y=size/2,r=size*.36;
+ if(name.startsWith('cat:'))D.cat(c,name.slice(4),x,y,size*.42);
+ else if(name.startsWith('cre:')){const i=+name.slice(4);CRE[i].draw(c,x,y,size*.3*(i===3?.75:1),0.3,{ph:1})}
+ else if(name.startsWith('rkt:')){D.rocket(c,x,y+size*.02,size/100,+name.slice(4),.2,true)}
+ else if(name==='galaxy')D.galaxy(c,x,y,size*.42,0);
+ else D[name](c,x,y,r);
+ return IC[k]=cn.toDataURL()}
+
+// ===== Veri =====
+const LOGO='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="lgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2a6b"/><stop offset="1" stop-color="#7b2cbf"/></linearGradient><radialGradient id="lgB" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#ffb400"/></radialGradient></defs><rect width="128" height="128" rx="28" fill="url(#lgA)"/><g stroke="#9fd8ff" stroke-width="5" stroke-linecap="round" opacity=".75"><path d="M12 46h18M6 64h24M14 82h16"/></g><circle cx="70" cy="64" r="37" fill="url(#lgB)" stroke="#c98a00" stroke-width="4"/><g transform="translate(70 64)"><path d="M-13-14C-13-26-6-31 1-31C9-31 15-26 15-18C15-11 8-9 4-5C1.500-2.500 1 0 1 4" fill="none" stroke="#1b2a6b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="1" cy="16" r="5" fill="#1b2a6b"/></g><path d="M104 12l3.500 9.500L117 25l-9.500 3.500L104 38l-3.500-9.500L91 25l9.500-3.500z" fill="#fff"/><circle cx="22" cy="104" r="3.500" fill="#ffe27a"/><circle cx="108" cy="104" r="2.500" fill="#fff" opacity=".8"/></svg>';
+const CATS=[{id:'mat',n:'Matematik'},{id:'tarih',n:'Tarih'},{id:'cog',n:'Coğrafya'},{id:'genel',n:'Genel kültür'},{id:'bilim',n:'Bilim'},{id:'tek',n:'Teknoloji'}];
+const DIFF=[{n:'Basit',m:1,o:3,col:'#4cd964',d:'Kolay sorular, 3 şık.'},{n:'Orta',m:3,o:3,col:'#ffd60a',d:'Orta zorlukta sorular, 3 şık.'},{n:'Zor',m:5,o:4,col:'#ff7a1a',d:'Zorlayıcı sorular, 4 şık.'},{n:'Dahi',m:10,o:4,col:'#bf5af2',d:'Çok detaylı sorular, 4 şık. Uzun sorularda süre 25 sn\'ye kadar çıkar.'}];
+let wallet=LS.get('bk_coins',0),owned=LS.get('bk_owned',[0]),rocket=LS.get('bk_rocket',0),best=LS.get('bk_best',0),myName=LS.get('bk_name',''),diff=LS.get('bk_diff',1),sel=LS.get('bk_sel',[1,1,1,1,1,1]);
+if(!Array.isArray(sel)||sel.length!==6||!sel.some(Boolean))sel=[1,1,1,1,1,1];
+if(!(diff>=0&&diff<=3))diff=1;if(!Array.isArray(owned)||!owned.includes(rocket))rocket=0;
+// ===== Sorular =====
+const IDX={};for(const id in QB){IDX[id]=[[],[],[],[]];QB[id].forEach((q,i)=>IDX[id][q[q.length-1]].push(i))}
+function pickBank(id,d){let dd=d;for(const off of [0,1,-1,2,-2,3,-3]){const t=d+off;if(t>=0&&t<4&&IDX[id][t].length){dd=t;break}}
+ const pool=IDX[id][dd],key='bk_seen_'+id+'_'+dd,S=new Set(LS.get(key,[]));let free=pool.filter(i=>!S.has(i));if(!free.length){S.clear();free=pool.slice()}
+ const i=free[rnd(free.length)];S.add(i);LS.set(key,[...S]);return QB[id][i]}
+function shape(q,a){if(/^\d{4}$/.test(a))return'y';if(/^\d+$/.test(a))return'n'+a.length;if(/başkenti/.test(q))return'cap';if(/coğrafi bölgede/.test(q))return'reg';return null}
+function augment(id,raw,n){const o=raw.slice(1,-1);if(o.length>=n)return o;const sh=shape(raw[0],o[0]);let cand=[];
+ if(sh){for(const r of QB[id]){if(r===raw)continue;const a=r[1];if(shape(r[0],a)===sh&&!o.includes(a))cand.push(a)}}
+ if(!cand.length){const wc=o[0].split(' ').length,ln=o[0].length;for(const r of QB[id]){if(r===raw)continue;const a=r[1];if(o.includes(a)||raw[0].includes(a)||/^\d/.test(a)!==/^\d/.test(o[0]))continue;if(a.split(' ').length===wc&&a.length>=ln*.6&&a.length<=ln*1.6+2)cand.push(a)}}
+ shuffle(cand);while(o.length<n&&cand.length){const a=cand.pop();if(!o.includes(a))o.push(a)}return o}
+function mathQ(d,n){let a,b,c,q,t=rnd([4,5,7,10][d]);const r=[20,100,500,1000][d],m=[10,12,20,30][d],k=[9,11,15,20][d];
+ if(t===0){a=2+rnd(r);b=2+rnd(r);q=a+' + '+b;c=a+b}
+ else if(t===1){a=10+rnd(r);b=1+rnd(a-1);q=a+' − '+b;c=a-b}
+ else if(t===2){a=2+rnd(m-1);b=2+rnd(m-1);q=a+' × '+b;c=a*b}
+ else if(t===3){b=2+rnd(k);c=2+rnd(k);a=b*c;q=a+' ÷ '+b}
+ else if(t===4){a=2+rnd(15);b=2+rnd(8);const e=2+rnd(8);if(rnd(2)){q=a+' + '+b+' × '+e;c=a+b*e}else{q='('+a+' + '+b+') × '+e;c=(a+b)*e}}
+ else if(t===5){const P=d===3?[5,10,15,20,25,35,40,45,60,75]:[10,20,25,50],p=P[rnd(P.length)],nn=20*(1+rnd(d===3?30:10));q='%'+p+'\'i kaçtır: '+nn;c=nn*p/100}
+ else if(t===6){a=2+rnd(d===3?24:14);q=a+'² = ?';c=a*a}
+ else if(t===7){a=10+rnd(20);b=3+rnd(10);const e=rnd(25);q=a+' × '+b+' − '+e;c=a*b-e}
+ else if(t===8){a=11+rnd(14);b=2+rnd(9);q=a+' × '+b;c=a*b}
+ else{a=101+rnd(150);b=2+rnd(8);q=a+' × '+b;c=a*b}
+ if(!q.includes('?'))q+=' = ?';
+ const sc=Math.max(3,Math.min(20,Math.round(c*.12))),w=new Set();while(w.size<n-1){const v=c+(1+rnd(sc))*(rnd(2)?1:-1);if(v>=0&&v!==c)w.add(v)}
+ return[q,''+c,...[...w].map(String),d]}
+function pickQ(ci,d){const cat=CATS[ci],n=DIFF[d].o;let raw,o;
+ if(cat.id==='mat'){raw=mathQ(d,n);o=raw.slice(1,-1)}else{raw=pickBank(cat.id,d);o=augment(cat.id,raw,n)}
+ return{q:raw[0],c:o[0],o:shuffle(o.slice()),d,ci}}
+const selIds=()=>CATS.map((c,i)=>i).filter(i=>sel[i]);
+// ===== Menüler =====
+let state='menu',view='main';
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function show(html){msg.innerHTML=html;msg.style.display='flex';msg.scrollTop=0}
+const mb=(id,t,cls)=>'<div class="mb'+(cls?' '+cls:'')+'" id="'+id+'">'+t+'</div>';
+const coinImg=(s)=>'<img src="'+icon('coin',s||26)+'" style="width:'+(s||26)+'px;height:'+(s||26)+'px;vertical-align:middle">';
+function setBtns(on){$('pbtn').style.display=$('mute').style.display=on?'block':'none';$('mute').textContent=muted?'🔇':'🔊'}
+$('mute').onclick=e=>{e.stopPropagation();muted=!muted;LS.set('bk_mute',muted);setBtns(true)};
+function mainMenu(){view='main';state='menu';banner.classList.remove('on');setBtns(false);hud.innerHTML='';
+ show('<div class="logo">'+LOGO+'</div><h1><span style="color:#fff">Bil</span> Kaç</h1><div class="sub">Bilgi oyunu: bil, kaç, kazan!</div><div class="wal">'+coinImg(26)+wallet+'</div>'+
+  mb('b2','📖 Nasıl oynanır')+mb('b3','🏆 Sıralamalar')+mb('b4','🚀 Roketler')+mb('b1','🧩 Soru türü','ye')+
+  '<div class="selinfo">'+sel.filter(Boolean).length+' ders · '+DIFF[diff].n+' (×'+DIFF[diff].m+')</div>'+
+  '<input id="nm" maxlength="12" placeholder="Takma adın (sıralama için)" value="'+esc(myName)+'"><div id="go">Başla</div>');
+ $('b1').onclick=showTypes;$('b2').onclick=showHow;$('b3').onclick=showLB;$('b4').onclick=showShop;$('go').onclick=start;
+ $('nm').oninput=e=>{myName=e.target.value.trim().slice(0,12);LS.set('bk_name',myName)}}
+function panel(title,body){view='sub';show('<h2>'+title+'</h2>'+body+mb('back','← Geri'));$('back').onclick=mainMenu}
+// --- Soru türü + zorluk kaydırıcısı
+const hex=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));
+function showTypes(){
+ panel('Soru türü','<div class="sec">Dersler</div><div class="chips" id="cc">'+CATS.map((c,i)=>'<span data-i="'+i+'" class="'+(sel[i]?'on':'')+'"><img src="'+icon('cat:'+c.id,30)+'">'+c.n+'</span>').join('')+'</div>'+
+  '<div class="sec">Zorluk</div><div class="sl" id="sl"><div class="tr"></div><div class="fl" id="fl"></div><div class="dot" style="left:28px"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="th" id="th">🧠</div></div>'+
+  '<div class="lb2" id="lab"><span>Basit</span><span>Orta</span><span>Zor</span><span>Dahi</span></div><div id="dinfo"></div>');
+ msg.querySelectorAll('#cc span').forEach(x=>x.onclick=()=>{const i=+x.dataset.i;if(sel[i]&&sel.filter(Boolean).length===1)return;sel[i]=sel[i]?0:1;LS.set('bk_sel',sel);x.classList.toggle('on',!!sel[i]);snd(500+i*40,.06,'sine',.05)});
+ const sl=$('sl'),th=$('th'),fl=$('fl'),labs=[...$('lab').children],PAD=28;let drag=false,lastSp=0;
+ const len=()=>sl.clientWidth-PAD*2,xOf=v=>PAD+len()*v/3;
+ const colAt=v=>{const i=Math.min(2,Math.floor(v)),f=v-i,a=hex(DIFF[i].col),b=hex(DIFF[i+1].col);return'rgb('+a.map((x,k)=>Math.round(x+(b[k]-x)*f)).join(',')+')'};
+ $('d1').style.left=xOf(1)+'px';$('d2').style.left=xOf(2)+'px';$('d3').style.left=xOf(3)+'px';
+ function sparks(n,spread){for(let i=0;i<n;i++){const s=document.createElement('i');s.className='sp';const x=parseFloat(th.style.left)||PAD;s.style.left=(x-4)+'px';s.style.top=(38+rr(-10,10))+'px';s.style.setProperty('--dx',rr(-spread,spread)+'px');s.style.setProperty('--dy',rr(-spread,spread)+'px');sl.appendChild(s);setTimeout(()=>s.remove(),700)}}
+ function paint(v,anim){sl.style.setProperty('--c',colAt(v));const tr=anim?'left .3s cubic-bezier(.3,1.6,.5,1),width .3s':'none';th.style.transition=fl.style.transition=tr;th.style.left=xOf(v)+'px';fl.style.width=(xOf(v)-PAD)+'px';th.style.transform='scale('+(1+v*.12)+') rotate('+(v*9)+'deg)';
+  const r=Math.round(v);labs.forEach((l,i)=>l.classList.toggle('on',i===r));sl.classList.toggle('max',v>2.75);
+  const d=DIFF[r];$('dinfo').innerHTML='<div class="dn" style="color:'+d.col+'">'+d.n+' <small>×'+d.m+' puan</small></div><div class="dd">'+d.d+'</div>'}
+ const valAt=e=>clamp((e.clientX-sl.getBoundingClientRect().left-PAD)/len()*3,0,3);
+ sl.addEventListener('pointerdown',e=>{drag=true;try{sl.setPointerCapture(e.pointerId)}catch(_){}const v=valAt(e);paint(v,false);sparks(4,22)});
+ sl.addEventListener('pointermove',e=>{if(!drag)return;const v=valAt(e);paint(v,false);const n=performance.now();if(n-lastSp>45){lastSp=n;sparks(1+Math.round(v),16+v*8);snd(300+v*260,.04,'sine',.03)}});
+ const end=e=>{if(!drag)return;drag=false;const v=Math.round(valAt(e));diff=v;LS.set('bk_diff',diff);paint(v,true);sparks(10+v*6,30+v*10);snd(400+v*150,.25,'triangle',.08,700+v*250)};
+ sl.addEventListener('pointerup',end);sl.addEventListener('pointercancel',end);
+ paint(diff,false)}
+// --- Nasıl oynanır
+function showHow(){const it=(ic,n,d)=>'<div class="cd"><img src="'+icon(ic,40)+'"><div><b>'+n+'</b><span>'+d+'</span></div></div>';
+ panel('Nasıl oynanır','<div class="how"><b>🎯 Amaç</b><br>Roketini yönlendir, altın topla, düşmanlardan kaç ve soruları bilerek puan kazan.</div>'+
+  '<div class="how"><b>🕹️ Kontrol</b><br>Parmağını ekranda sürükle (bilgisayarda fare veya ok tuşları).</div>'+
+  '<div class="how"><b>⭐ Puanlama</b> (her doğru cevap için)<table><tr><td>Basit</td><td>×1 → 1 puan</td></tr><tr><td>Orta</td><td>×3 → 3 puan</td></tr><tr><td>Zor</td><td>×5 → 5 puan</td></tr><tr><td>Dahi</td><td>×10 → 10 puan</td></tr></table>Altın puana girmez. Altınlar birikir ve roket almak için kullanılır.</div>'+
+  '<div class="sec">Toplananlar</div><div class="grid">'+it('coin','Altın','Birikir, roket al')+it('heart','Kalp','+1 can (en çok 5)')+it('shield','Kalkan','8 sn hasar almazsın')+it('glass','Kum saati','8 sn her şey yavaşlar')+it('magnet','Mıknatıs','8 sn altınları çeker')+it('star','Yıldız','Soruda +10 sn verir')+it('galaxy','Galaksi','5 soruyu bil, 1500 altın kazan')+'</div>'+
+  '<div class="sec">Soru simgeleri</div><div class="grid">'+CATS.map(c=>it('cat:'+c.id,c.n,'Yakala, soru gelsin')).join('')+'</div>'+
+  '<div class="sec">Düşmanlar</div><div class="grid">'+CRE.map((c,i)=>it('cre:'+i,c.n,c.d)).join('')+'</div>'+
+  '<div class="how"><b>❓ Sorular</b><br>Süre 20 saniyeyle başlar, oyun ilerledikçe kısalır. Yanlış cevapta can kaybetmezsin. Seçtiğin zorluk oyun boyunca sabit kalır, oyun ise zamanla hızlanır. Galaksi görevinde süre yoktur ama tek yanlış görevi bitirir.</div>')}
+// --- Roketler
+function showShop(){panel('Roketler','<div class="wal">'+coinImg(26)+'<span id="wv">'+wallet+'</span></div><div class="shop" id="shop"></div><div class="note" id="shm"></div>');renderShop()}
+function renderShop(){$('wv').textContent=wallet;$('shop').innerHTML=RN.map((n,i)=>'<div class="rc'+(rocket===i?' eq':'')+'" data-i="'+i+'"><img class="r" src="'+icon('rkt:'+i,84)+'"><b>'+n+'</b><span>'+(owned.includes(i)?(rocket===i?'✔ Seçili':'Seç'):coinImg(18)+PR[i])+'</span></div>').join('');
+ msg.querySelectorAll('.rc').forEach(x=>x.onclick=()=>{const i=+x.dataset.i;if(owned.includes(i)){rocket=i;LS.set('bk_rocket',i);snd(600,.1)}else if(wallet>=PR[i]){wallet-=PR[i];owned.push(i);rocket=i;LS.set('bk_coins',wallet);LS.set('bk_owned',owned);LS.set('bk_rocket',i);snd(500,.3,'triangle',.1,1100);$('shm').textContent=RN[i]+' satın alındı!'}else{$('shm').textContent='Yetersiz altın: '+(PR[i]-wallet)+' altın daha gerek.';snd(180,.2,'sawtooth',.06)}renderShop()})}
+// --- Sıralama (Firebase)
+let FB=null,uid=null,LB=[],lbOn=false;
+function lbHtml(){if(!lbOn)return'<div class="note">Sıralama bağlanıyor… İnternet bağlantını kontrol et.</div>';if(!LB.length)return'<div class="note">Henüz skor yok. İlk sen ol!</div>';return LB.slice(0,10).map((o,i)=>'<div class="lbrow'+(o.name===myName&&myName?' me':'')+'"><span>'+(i+1)+'. '+esc(o.name||'Oyuncu')+'</span><b>'+o.sc+'</b></div>').join('')}
+function showLB(){panel('Sıralamalar','<div id="lbx">'+lbHtml()+'</div>')}
+function refreshLB(){const e=$('lbx');if(e)e.innerHTML=lbHtml()}
+async function submitScore(sc){try{if(!FB||!uid||sc<=0)return;const ref=FB.doc(FB.fs,'scores',uid),sn=await FB.getDoc(ref),o=sn.exists()?sn.data():{},nm=(myName||'Oyuncu').slice(0,12);if(o.sc>=sc&&o.name===nm)return;await FB.setDoc(ref,{name:nm,sc:Math.max(o.sc||0,sc)})}catch(e){}}
+(async()=>{try{const b='https://www.gstatic.com/firebasejs/10.12.2/';const [A,Au,F]=await Promise.all([import(b+'firebase-app.js'),import(b+'firebase-auth.js'),import(b+'firebase-firestore.js')]);
+ const app=A.initializeApp({apiKey:"AIzaSyBX6zaaZPa1lehugkWpB76r__3SL-ZnGPU",authDomain:"bilkac.firebaseapp.com",projectId:"bilkac",storageBucket:"bilkac.firebasestorage.app",messagingSenderId:"320958396515",appId:"1:320958396515:web:68f64a3c66e51980c0a056"});
+ const auth=Au.getAuth(app),fs=F.getFirestore(app),cred=await Au.signInAnonymously(auth);uid=cred.user.uid;FB={doc:F.doc,getDoc:F.getDoc,setDoc:F.setDoc,fs};lbOn=true;
+ F.onSnapshot(F.query(F.collection(fs,'scores'),F.orderBy('sc','desc'),F.limit(100)),sn=>{LB=sn.docs.map(d=>d.data());refreshLB()},()=>{});}catch(e){}})();
+
+// ===== Oyun =====
+const P={x:0,y:0,tx:0,ty:0};let G={};
+const STAGE_LEN=40,LANES=5,MAXC=CRE.length-1,laneX=l=>18+(W-36)*(l+.5)/LANES,vsc=()=>clamp(H/720,.75,1.3);
+let thIdx=0,curA=THEMES[0].a.slice(),curB=THEMES[0].b.slice();
+const PT=Array.from({length:44},()=>({x:Math.random(),y:Math.random(),r:rr(.8,2.6),v:rr(.02,.08),ph:rr(0,6)}));
+function setTheme(i,instant){thIdx=i%THEMES.length;if(instant){curA=THEMES[thIdx].a.slice();curB=THEMES[thIdx].b.slice()}}
+function newGame(){G={score:0,lives:3,stars:0,coins:0,galCoins:0,quizOk:0,t:0,stage:0,items:[],trail:[],spawn:.8,hz:2.5,forceNew:false,shield:0,magnet:0,slow:0,flash:0,shake:0,pause:0,bannerT:0,galaxyDone:false,galaxyAt:1e9,toast:null,hudT:0,lastHaz:null};P.x=P.tx=W/2;P.y=P.ty=H*.78}
+function showBanner(st,kind){const ci=Math.min(st,MAXC),th=THEMES[st%THEMES.length];
+ $('bk').textContent=kind==='start'?'Başlıyoruz':'Yeni bölge · '+th.n;
+ if(kind==='more'){$('bn').textContent='Hız artıyor';$('bd').textContent='Bütün yaratıklar burada. Artık her şey biraz daha hızlı.'}else{$('bn').textContent=(kind==='new'?'Yeni yaratık: ':'')+CRE[ci].n;$('bd').textContent=CRE[ci].d}
+ bctx.clearRect(0,0,128,128);CRE[ci].draw(bctx,64,66,ci===3?24:34,.3,{ph:1});banner.classList.add('on')}
+function start(){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(e){}
+ newGame();setTheme(0,true);state='play';view='game';msg.style.display='none';quiz.style.display='none';setBtns(true);G.bannerT=5;showBanner(0,'start');snd(520,.15,'triangle',.08,780);updateHUD()}
+function updateHUD(){if(state==='menu')return;let h='<div class="hr"><div id="hearts">';for(let i=0;i<Math.max(G.lives,3);i++)h+='<img src="'+icon('heart',24)+'" style="'+(i<G.lives?'':'opacity:.2;filter:grayscale(1)')+'">';
+ h+='</div><div class="sc">'+G.score+'</div><div style="width:44px"></div></div><div class="hr2"><span>'+coinImg(20)+' '+G.coins+'</span><span><img src="'+icon('star',20)+'"> '+G.stars+'</span></div><div class="pw">';
+ for(const [k,ic] of [['shield','shield'],['magnet','magnet'],['slow','glass']])if(G[k]>0)h+='<span><img src="'+icon(ic,18)+'"> '+Math.ceil(G[k])+'</span>';
+ hud.innerHTML=h+'</div>'}
+// --- Ses/duraklat
+$('pbtn').onclick=e=>{e.stopPropagation();pause()};
+function pause(){if(state!=='play')return;state='pause';show('<h2>Duraklatıldı</h2>'+mb('rs','▶ Devam','ye')+mb('qt2','🏠 Oyunu bitir'));$('rs').onclick=()=>{msg.style.display='none';state='play'};$('qt2').onclick=()=>{msg.style.display='none';over()}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
+// --- Kontrol
+function aim(e){if(state!=='play'||(e.target.closest&&e.target.closest('.ib')))return;P.tx=e.clientX;P.ty=e.clientY-(e.pointerType==='touch'?60:0)}
+addEventListener('pointermove',aim);addEventListener('pointerdown',aim);
+const keys={};addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if((e.key==='Enter'||e.key===' ')&&state==='menu'&&e.target.tagName!=='INPUT'){const b=$('again')||$('go');if(b)b.click()}});addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=0});
+// --- Doğma
+const occ=(ci,l)=>ci===2?[l-1,l,l+1].filter(x=>x>=0&&x<LANES):ci===4?[0,1,2,3,4]:[l];
+function pickCre(){const cu=Math.min(G.stage,MAXC);if(G.forceNew&&G.stage<=MAXC)return cu;const w=[];for(let i=0;i<=cu;i++)w.push(i===cu?3:i===cu-1?2:1);let r=Math.random()*w.reduce((a,b)=>a+b,0);for(let i=0;i<w.length;i++){if((r-=w[i])<=0)return i}return cu}
+function spawnOne(){if(G.items.filter(it=>it.y<150).length>=3)return;const V=vsc(),order=shuffle([0,1,2,3,4]),clear=(l,min)=>G.items.every(it=>!it.lanes.includes(l)||it.y>min);
+ if(G.stage>=1&&!G.galaxyDone&&G.t>=G.galaxyAt){for(let l=0;l<LANES-1;l++){if(clear(l,220)&&clear(l+1,220)){G.items.push({t:'galaxy',x:(laneX(l)+laneX(l+1))/2,y:-70,r:38,v:70,lanes:[l,l+1],ph:0});G.galaxyDone=true;return}}return}
+ const w=[['coin',46],['cat',15],['star',5],['shield',3],['magnet',3],['glass',3]];if(G.lives<5)w.push(['heart',G.lives<=1?10:4]);if(G.hz<=0)w.push(['haz',G.forceNew?1000:32+Math.min(G.stage,10)*4]);
+ let r=Math.random()*w.reduce((a,b)=>a+b[1],0),type='coin';for(const [k,v] of w){if((r-=v)<=0){type=k;break}}
+ const st=Math.min(G.stage,12);
+ if(type==='haz'){const ci=pickCre(),def=CRE[ci];let ok=null;for(const l of order){if(G.lastHaz&&G.lastHaz.y<H*.5&&G.lastHaz.lanes.includes(l))continue;if(occ(ci,l).every(x=>clear(x,ci===4?130:190*V))){ok=l;break}}if(ok===null)return;
+  const it={t:'haz',ci,x:laneX(ok),bx:laneX(ok),y:-50,r:def.r,v:(150+st*9)*def.sp,lanes:occ(ci,ok),ph:rr(0,6)};G.items.push(it);G.lastHaz=it;G.hz=Math.max(1.5,3.6-.28*st)+rr(0,.9);G.forceNew=false;return}
+ const need=type==='coin'?(Math.random()<.35?3:1):1,rad={coin:12,cat:17}[type]||16;
+ for(const l of order){if(clear(l,(type==='cat'?120:100)*V+(need-1)*58)){for(let i=0;i<need;i++)G.items.push({t:type,x:laneX(l),y:-30-i*58,r:rad,v:125+st*7+rr(0,25),lanes:[l],ph:rr(0,6),ci:type==='cat'?selIds()[rnd(selIds().length)]:0});return}}}
+function hurt(dm){if(G.shield>0){snd(420,.12,'square',.05);G.toast={t:.8,s:'Kalkan!'};return}G.lives-=dm;G.flash=.35;G.shake=.3;snd(150,.25,'sawtooth',.1,80);try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}updateHUD();if(G.lives<=0)over()}
+function collect(it){const t=it.t;
+ if(t==='coin'){G.coins++;wallet++;LS.set('bk_coins',wallet);snd(1000+(G.coins%8)*60,.06,'sine',.05,1500)}
+ else if(t==='heart'){G.lives=Math.min(5,G.lives+1);G.toast={t:1,s:'+1 can'};snd(700,.25,'triangle',.09,1100)}
+ else if(t==='shield'){G.shield=8;G.toast={t:1,s:'Kalkan!'};snd(600,.3,'triangle',.09,900)}
+ else if(t==='magnet'){G.magnet=8;G.toast={t:1,s:'Mıknatıs!'};snd(500,.3,'triangle',.09,850)}
+ else if(t==='glass'){G.slow=8;G.toast={t:1,s:'Yavaşlatma!'};snd(450,.3,'triangle',.09,300)}
+ else if(t==='star'){G.stars++;G.toast={t:1,s:'+1 yıldız'};snd(900,.2,'triangle',.09,1400)}
+ else if(t==='cat')ask(it.ci);else if(t==='galaxy')startGalaxy();updateHUD()}
+// --- Güncelleme
+function update(dt){G.t+=dt;const next=(G.stage+1)*STAGE_LEN;
+ if(G.t>=next){G.stage++;const more=G.stage>MAXC;G.pause=more?4:7;G.bannerT=G.pause;G.hz=0;G.forceNew=!more;setTheme(G.stage);showBanner(G.stage,more?'more':'new');snd(300,.5,'sawtooth',.06,600);if(G.stage===1)G.galaxyAt=G.t+rr(14,30)}
+ const freeze=G.pause>0||G.t>=(G.stage+1)*STAGE_LEN-1.5;
+ if(G.pause>0)G.pause-=dt;else{G.shield=Math.max(0,G.shield-dt);G.magnet=Math.max(0,G.magnet-dt);G.slow=Math.max(0,G.slow-dt)}
+ if(G.bannerT>0){G.bannerT-=dt;if(G.bannerT<=0)banner.classList.remove('on')}
+ G.flash=Math.max(0,G.flash-dt);G.shake=Math.max(0,G.shake-dt);if(G.toast){G.toast.t-=dt;if(G.toast.t<=0)G.toast=null}
+ const s=420*dt;if(keys.arrowleft||keys.a)P.tx-=s;if(keys.arrowright||keys.d)P.tx+=s;if(keys.arrowup||keys.w)P.ty-=s;if(keys.arrowdown||keys.s)P.ty+=s;
+ P.tx=clamp(P.tx,22,W-22);P.ty=clamp(P.ty,110,H-30);P.x+=(P.tx-P.x)*Math.min(1,dt*14);P.y+=(P.ty-P.y)*Math.min(1,dt*14);
+ if(!freeze){G.spawn-=dt;G.hz-=dt;if(G.spawn<=0){spawnOne();G.spawn=rr(.5,.8)}}
+ const sl=G.slow>0?.5:1,V=vsc();
+ for(const it of G.items){it.y+=it.v*V*sl*dt;
+  if(it.t==='coin'&&G.magnet>0){const dx=P.x-it.x,dy=P.y-it.y,d=Math.hypot(dx,dy);if(d<180&&d>1){const m=Math.min(520*dt,d);it.x+=dx/d*m;it.y+=dy/d*m}}
+  if(it.t==='haz'){if(it.ci===2)it.x=it.bx+Math.sin(it.y/48+it.ph)*Math.min(70,W*.14);else if(it.ci===4)it.x=clamp(W/2+Math.sin(it.y/40+it.ph)*(W/2-30),22,W-22)}
+  const d=Math.hypot(it.x-P.x,it.y-P.y),hr=it.t==='haz'?it.r*.8+13:it.r+15;
+  if(d<hr&&!it.dead){it.dead=true;if(it.t==='haz')hurt(CRE[it.ci].dm);else collect(it);if(state!=='play')break}}
+ G.items=G.items.filter(it=>!it.dead&&it.y<H+80);
+ G.trail.push({x:P.x+rr(-3,3),y:P.y+24,l:.55});for(const p of G.trail){p.l-=dt*1.6;p.y+=70*dt}G.trail=G.trail.filter(p=>p.l>0);
+ G.hudT-=dt;if(G.hudT<=0){G.hudT=.25;updateHUD()}}
+// --- Sorular
+let qTimer=null;
+function openQuiz(q,cfg){const cat=CATS[q.ci],dd=DIFF[q.d];
+ quiz.innerHTML='<div class="qh"><img src="'+icon('cat:'+cat.id,40)+'"><span>'+cat.n+'</span><span class="db" style="background:'+dd.col+'">'+dd.n+'</span></div>'+(cfg.T?'<div id="qt"><i id="qf"></i></div><div id="qs"></div>':'<div class="sec">'+cfg.prog+'</div>')+
+  '<p class="qq">'+esc(q.q)+'</p><div id="qo">'+q.o.map((o,i)=>'<button data-i="'+i+'">'+esc(o)+'</button>').join('')+'</div>'+(cfg.stars?'<div class="mb" id="sb"></div>':'');
+ quiz.style.display='flex';quiz.scrollTop=0;
+ let left=cfg.T||0,tot=cfg.T||0,done=false;const bs=[...quiz.querySelectorAll('#qo button')],sb=$('sb'),qf=$('qf'),qs=$('qs');
+ const sbU=()=>{if(sb){sb.innerHTML='<img src="'+icon('star',26)+'" style="width:22px;height:22px;vertical-align:middle"> +10 sn ('+G.stars+')';sb.className='mb'+(G.stars>0?'':' off')}};
+ const fin=b=>{if(done)return;done=true;clearInterval(qTimer);const ok=!!b&&q.o[+b.dataset.i]===q.c;bs.forEach(x=>{if(q.o[+x.dataset.i]===q.c)x.style.background='#3ddc84'});if(b&&!ok)b.style.background='#ff5a5a';if(sb)sb.style.display='none';
+  if(ok)snd(660,.3,'triangle',.1,990);else snd(180,.3,'sawtooth',.08,90);setTimeout(()=>{quiz.style.display='none';cfg.done(ok)},ok?750:1400)};
+ bs.forEach(b=>b.onclick=()=>fin(b));
+ if(sb){sbU();sb.onclick=()=>{if(done||G.stars<=0)return;G.stars--;left+=10;tot+=10;sbU();updateHUD();snd(900,.15,'triangle',.08,1300)}}
+ if(cfg.T){qs.textContent=Math.ceil(left);qTimer=setInterval(()=>{left-=.1;qf.style.width=Math.max(0,left/tot*100)+'%';qf.style.background=left<4?'#ff4d4d':'var(--ac)';qs.textContent=Math.ceil(Math.max(0,left));if(left<=0)fin(null)},100)}}
+function ask(ci){state='quiz';const q=pickQ(ci,diff),base=Math.max(10,20-Math.floor(G.t/30));let T=base;if(diff===3){const L=q.q.length;T=Math.min(25,base+(L>110?5:L>75?3:0))}if(CATS[ci].id==='mat')T=Math.min(25,T+5);
+ snd(520,.25,'triangle',.08,1000);
+ openQuiz(q,{T,stars:true,done:ok=>{if(ok){G.score+=DIFF[diff].m;G.quizOk++;G.toast={t:1.2,s:'+'+DIFF[diff].m+' puan'}}state='play';updateHUD()}})}
+function startGalaxy(){state='galaxy';let n=0;
+ quiz.innerHTML='<canvas id="gc" width="160" height="160"></canvas><h2>Galaksi Görevi</h2><p class="note" style="font-size:15px">Süresiz 5 soru. Zorluklar karışık gelir. Hepsini bilirsen <b>1500 altın</b> kazanırsın. Tek yanlış cevapta görev biter.</p>'+mb('gs','Başla','ye');quiz.style.display='flex';
+ D.galaxy($('gc').getContext('2d'),80,80,64,.5);$('gs').onclick=next;
+ function next(){const ids=selIds(),q=pickQ(ids[rnd(ids.length)],rnd(4));openQuiz(q,{T:0,prog:'Galaksi · Soru '+(n+1)+' / 5',done:ok=>{if(!ok)return end(false);n++;n>=5?end(true):next()}})}
+ function end(win){if(win){wallet+=1500;G.galCoins+=1500;LS.set('bk_coins',wallet)}
+  quiz.innerHTML='<h2>'+(win?'Galaksi tamamlandı!':'Görev bitti')+'</h2><div class="big">'+(win?'+1500 altın':'😔')+'</div><p class="note">'+(win?'Harika, 5 sorunun hepsini bildin.':'Bir yanlış cevap görevi bitirdi. Oyuna devam!')+'</p>'+mb('gd','Devam','ye');quiz.style.display='flex';snd(win?800:200,.5,win?'triangle':'sawtooth',.1,win?1500:100);
+  $('gd').onclick=()=>{quiz.style.display='none';state='play';updateHUD()}}}
+function over(){state='menu';view='result';clearInterval(qTimer);quiz.style.display='none';banner.classList.remove('on');setBtns(false);hud.innerHTML='';
+ const nr=G.score>best&&G.score>0;if(G.score>best){best=G.score;LS.set('bk_best',best)}LS.set('bk_coins',wallet);submitScore(G.score);
+ show('<h2>Oyun bitti!</h2><div class="res">'+DIFF[diff].n+' seviyesi</div><div class="res">✅ '+G.quizOk+' doğru cevap × '+DIFF[diff].m+' puan</div><div class="big">'+G.score+' puan</div><div class="res">'+(nr?'🎉 Yeni rekor!':'Rekor: '+best)+'</div>'+
+  '<div class="res">'+coinImg(22)+' '+G.coins+' altın toplandı'+(G.galCoins?' + '+G.galCoins+' galaksi':'')+'</div><div class="res">Cüzdan: <b>'+wallet+'</b></div>'+mb('again','🔁 Tekrar oyna','ye')+mb('home','🏠 Ana ekran'));
+ $('again').onclick=start;$('home').onclick=mainMenu;snd(300,.5,'sawtooth',.09,60)}
+// ===== Çizim =====
+function renderBG(T,dt){const th=THEMES[thIdx%THEMES.length],k=1-Math.exp(-dt*1.4);for(let i=0;i<3;i++){curA[i]+=(th.a[i]-curA[i])*k;curB[i]+=(th.b[i]-curB[i])*k}
+ const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgb('+curA.map(Math.round)+')');g.addColorStop(1,'rgb('+curB.map(Math.round)+')');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ const p=th.p;ctx.save();
+ for(const q of PT){let x=q.x*W,y=q.y*H;
+  if(p==='star'){q.y+=q.v*dt*.5;ctx.fillStyle='rgba(255,255,255,'+(.35+.4*Math.sin(T*2+q.ph))+')';ctx.beginPath();ctx.arc(x,y,q.r,0,7);ctx.fill()}
+  else if(p==='ember'){q.y-=q.v*dt*2;q.x+=Math.sin(T+q.ph)*dt*.02;ctx.fillStyle='rgba(255,'+(120+q.ph*20|0)+',40,.7)';ctx.beginPath();ctx.arc(x,y,q.r,0,7);ctx.fill()}
+  else if(p==='bubble'){q.y-=q.v*dt*1.6;ctx.strokeStyle='rgba(190,235,255,.5)';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(x,y,q.r*2,0,7);ctx.stroke()}
+  else if(p==='firefly'){q.x+=Math.sin(T*.8+q.ph)*dt*.03;q.y+=Math.cos(T*.6+q.ph)*dt*.02;ctx.fillStyle='rgba(220,255,120,'+(.4+.5*Math.sin(T*3+q.ph))+')';ctx.beginPath();ctx.arc(x,y,q.r*1.2,0,7);ctx.fill()}
+  else if(p==='dust'){q.x+=q.v*dt*.8;ctx.fillStyle='rgba(255,220,160,.35)';ctx.beginPath();ctx.arc(x,y,q.r,0,7);ctx.fill()}
+  else{q.y+=q.v*dt*1.4;q.x+=Math.sin(T+q.ph)*dt*.03;ctx.fillStyle='rgba(255,255,255,.8)';ctx.beginPath();ctx.arc(x,y,q.r,0,7);ctx.fill()}
+  if(q.y>1.02)q.y=-.02;if(q.y<-.02)q.y=1.02;if(q.x>1.02)q.x=-.02;if(q.x<-.02)q.x=1.02}
+ const kd=th.h,amp=H*[.1,.12,.05,.06,.07,.13,0][kd],base=H*.045;if(amp>0){ctx.fillStyle='rgba(0,0,0,.32)';ctx.beginPath();ctx.moveTo(0,H);for(let x=0;x<=W+8;x+=8){let h;const s=kd*2.1;if(kd===2)h=(Math.sin(x*.02+T*.8)*.5+.5)*amp;else if(kd===4)h=(Math.sin(x*.008+s)*.5+.5)*amp+Math.sin(x*.02)*3;else if(kd===3)h=Math.abs(Math.sin(x*.045+s))*amp;else h=(Math.abs(Math.sin(x*.011+s))*.65+Math.abs(Math.sin(x*.027+s*2))*.35)*amp;ctx.lineTo(x,H-base-h)}ctx.lineTo(W+8,H);ctx.closePath();ctx.fill()}
+ ctx.restore()}
+function drawItem(it,T){const t=it.t;
+ if(t==='coin'){D.coin(ctx,it.x,it.y,it.r);return}
+ if(t==='galaxy'){D.galaxy(ctx,it.x,it.y,it.r,T);return}
+ if(t==='haz'){const def=CRE[it.ci],L=it.r*3.4,g=ctx.createLinearGradient(0,it.y-L,0,it.y);g.addColorStop(0,'rgba(255,40,40,0)');g.addColorStop(1,'rgba(255,60,60,.45)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(it.x-it.r*.55,it.y);ctx.lineTo(it.x+it.r*.55,it.y);ctx.lineTo(it.x,it.y-L);ctx.closePath();ctx.fill();
+  ctx.save();if(it.ci===5)ctx.globalAlpha=.25+.75*Math.abs(Math.sin(T*1.8+it.ph));def.draw(ctx,it.x,it.y,it.r,T,it);ctx.restore();return}
+ const L=it.r*3.2,g=ctx.createLinearGradient(0,it.y-L,0,it.y);g.addColorStop(0,'rgba(60,150,255,0)');g.addColorStop(1,'rgba(100,195,255,.5)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(it.x-it.r*.55,it.y);ctx.lineTo(it.x+it.r*.55,it.y);ctx.lineTo(it.x,it.y-L);ctx.closePath();ctx.fill();
+ if(t==='cat')D.cat(ctx,CATS[it.ci].id,it.x,it.y,it.r);else D[t](ctx,it.x,it.y,it.r)}
+function drawShield(x,y,T,k){const r=36,bl=k<2&&Math.floor(T*8)%2===0;if(bl)return;ctx.save();const g=ctx.createRadialGradient(x,y,r*.55,x,y,r);g.addColorStop(0,'rgba(90,200,255,0)');g.addColorStop(.75,'rgba(90,200,255,.2)');g.addColorStop(1,'rgba(160,238,255,.6)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+ ctx.lineWidth=3.5;ctx.strokeStyle='rgba(200,247,255,'+(.8+.2*Math.sin(T*6))+')';ctx.shadowColor='#5ad0ff';ctx.shadowBlur=16;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.stroke();ctx.shadowBlur=0;
+ ctx.lineWidth=1.6;ctx.strokeStyle='rgba(255,255,255,.6)';for(let i=0;i<3;i++){const a=T*1.6+i*2.1;ctx.beginPath();ctx.arc(x,y,r-4,a,a+.75);ctx.stroke()}
+ ctx.fillStyle='rgba(255,255,255,.4)';ctx.beginPath();ctx.ellipse(x-r*.45,y-r*.5,r*.22,r*.1,-.7,0,7);ctx.fill();ctx.restore()}
+function drawMagnet(x,y,T){ctx.save();ctx.lineWidth=2;for(let i=0;i<3;i++){const k=((T*.9+i/3)%1);ctx.strokeStyle='rgba(255,90,90,'+(.55*(1-k)).toFixed(2)+')';ctx.beginPath();ctx.arc(x,y,40+k*120,0,7);ctx.stroke()}ctx.restore()}
+const TC=['#ffb347','#6cc0ff','#5eead4','#c4a1ff','#ffd23f'];
+function render(T,dt){renderBG(T,dt);const live=state==='play'||state==='quiz'||state==='galaxy'||state==='pause';
+ if(!live)return;ctx.save();if(G.shake>0)ctx.translate(rr(-3,3),rr(-3,3));
+ for(const it of G.items)drawItem(it,T);
+ for(const p of G.trail){ctx.globalAlpha=Math.max(0,p.l);ctx.fillStyle=rocket>=5?'hsl('+(T*220%360)+',90%,60%)':TC[rocket];ctx.beginPath();ctx.arc(p.x,p.y,(rocket>=3?4:3)*p.l+1,0,7);ctx.fill()}ctx.globalAlpha=1;
+ if(G.magnet>0)drawMagnet(P.x,P.y,T);
+ D.rocket(ctx,P.x,P.y,.95,rocket,T,true);if(G.shield>0)drawShield(P.x,P.y,T,G.shield);
+ ctx.restore();
+ if(G.flash>0){ctx.fillStyle='rgba(255,0,0,'+(G.flash*.45).toFixed(2)+')';ctx.fillRect(0,0,W,H)}
+ if(G.toast){ctx.save();ctx.globalAlpha=Math.min(1,G.toast.t*2);ctx.textAlign='center';ctx.font='bold 30px "Trebuchet MS",sans-serif';ctx.lineWidth=5;ctx.strokeStyle='rgba(0,0,0,.6)';ctx.strokeText(G.toast.s,W/2,H*.32);ctx.fillStyle='#fff';ctx.fillText(G.toast.s,W/2,H*.32);ctx.restore()}}
+let lastT=0;
+function loop(ts){requestAnimationFrame(loop);const dt=Math.min((ts-lastT)/1000||0,.05);lastT=ts;if(state==='play')update(dt);render(ts/1000,dt)}
+mainMenu();requestAnimationFrame(loop);
+
+</script>
+</body>
+</html>
